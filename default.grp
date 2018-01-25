@@ -1,0 +1,15 @@
+#GraphState
+#Parameters {
+null
+null
+1
+MONTH
+}
+#Traces {
+LINE
+{
+Palkka;null;0;NONE;ACCUMULATE
+}
+}
+
+#END

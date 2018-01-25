@@ -1,0 +1,7 @@
+font = Bookman Old Style
+fontSize = 12
+background = tausta.jpg
+fontColor = 0, 0, 0, 255
+lineColor = 0,0,0, 255
+errorColor = 255,0,0,255
+dateFormat = dd.MM.yyyy

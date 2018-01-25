@@ -1,0 +1,15 @@
+#GraphState {
+#Parameters {
+01.01.2000
+05.01.2001
+1
+DAY
+}
+#Traces {
+LINE
+{
+Alkoholi yhteensä;null;0;NONE;ACCUMULATE
+}
+}
+
+}

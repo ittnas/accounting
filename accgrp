@@ -1,0 +1,13 @@
+#GraphState {
+#Parameters {
+null
+null
+1
+MONTH
+}#Traces {
+LINE
+{Alkoholi yhteensä;null;0;NONE;ACCUMULATE
+}
+}
+
+}

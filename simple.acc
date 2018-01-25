@@ -1,0 +1,14 @@
+#Accounts {
+Tili 2;Juuri;
+Tili 1;Juuri;
+Juuri;;Juuritili
+}
+
+#Notes {
+Lisäys 5;1328392800000;Tili 2;Tili 1;40.0
+Lisäys 4;1325628000000;Tili 1;Tili 2;40.0
+Lisäys 3;1325541600000;Tili 1;Tili 2;30.0
+Lisäys 2;1325455200000;Tili 1;Tili 2;20.0
+Lisäys 1;1325368800000;Tili 1;Tili 2;10.0
+}
+

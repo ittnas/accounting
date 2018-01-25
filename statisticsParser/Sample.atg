@@ -1,0 +1,92 @@
+COMPILER Sample
+CHARACTERS
+	digit = '0'..'9'.
+	nat = '1' ..'9'.
+	letter = 'a' .. 'z' + 'A' .. 'Z'.
+
+TOKENS
+	number = digit {digit}.
+	account = "ac" digit {digit}.
+	
+IGNORE '\r' + '\n'
+	
+PRODUCTIONS
+	Sample	(. int n; .)
+	= { "exp"
+		Add<out n> (. System.out.println("heehee"); .)
+		}.
+		
+	Add<out int i> 	(. int j = 0;i=0; .)
+	= Sub<out i> 
+		 { '+' Sub<out j>  (. add(i,j); .)
+		 }
+	| Sub<out i>
+		{ '+' SubN<out j>  (. addAN(i,j); .)
+		}
+	| SubN<out i>
+		{ '+' Sub<out j>   (. addNA(i,j); .)
+		}.
+	
+	Sub<out int i> (. int j = 0;i=0; .)
+	= Fact<out i>
+		{ '-' Fact<out j> (. sub(i,j); .)
+		}
+	| Fact<out i>
+		{ '-' FactN<out j>  (. subAN(i,j); .)
+		}
+	| FactN<out i>
+		{ '-' Fact<out j>   (. subNA(i,j); .)
+		}.
+	
+	Fact<out int i>	(. int j = 0;i=0; .)
+	= Div<out i>
+	{'*' Div<out j> (. fact(i,j); .)
+	}
+	| Div<out i>
+		{ '*' DivN<out j>  (. factAN(i,j); .)
+		}
+	| DivN<out i>
+		{ '*' Div<out j>   (. factNA(i,j); .)
+		}.
+	
+	Div<out int i> (. int j = 0; i = 0; .)
+	= Bracket< out i>
+	{'/' Bracket<out j> (. div(i,j); .)
+	}
+	| Bracket<out i>
+		{ '/' BracketN<out j>  (. divAN(i,j); .)
+		}
+	| BracketN<out i>
+		{ '*' Bracket<out j>   (. divNA(i,j); .)
+		}.
+	
+	Bracket<out int i> (. i = 0; .)
+	= account  (. i = parseAcc(t.val); .)
+	| '(' Add<out i> ')'.
+	
+	BracketN<out int i> (. i = 0; .)
+	= number (. i = Integer.parseInt(t.val); .)
+	| '(' AddN<out i> ')'.
+	
+	AddN<out int i> (. int j; .)
+	= SubN<out i>
+		{ '+' SubN<out j> (. i = i + j; .)
+		}.
+		
+	SubN<out int i> (. int j; .)
+	= FactN<out i>
+		{ '-' FactN<out j> (. i = i - j; .)
+		}.
+	
+		
+	FactN<out int i>	(. int j; .)
+	= DivN<out i>
+	{'*' DivN<out j> (. i = i*j; .)
+	}.
+	
+	DivN<out int i> (. int j; .)
+	= BracketN< out i>
+	{'/' BracketN<out j> (. i = i/j; .)
+	}.
+		
+END Sample.

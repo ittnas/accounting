@@ -1,0 +1,30 @@
+#GraphState
+#Parameters {
+null
+null
+1
+DAY
+}
+#Traces {
+LINE
+{
+Ahvenen velat;null;0;NONE;ACCUMULATE
+}
+}
+
+#END
+#GraphState
+#Parameters {
+null
+null
+1
+MONTH
+}
+#Traces {
+PIE
+{
+Ahvenen velat;null;0;NONE;ACCUMULATE
+}
+}
+
+#END
