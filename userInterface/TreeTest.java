@@ -13,7 +13,7 @@ public class TreeTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Account root = new Account("juuri", "T‰m‰ tili on juuri.");
+		Account root = new Account("juuri", "T√§m√§ tili on juuri.");
 		Account tili1 = new Account("1", "tili1");
 		Account tili2 = new Account("2", "tili2");
 		Account tili3 = new Account("3", "tili3");

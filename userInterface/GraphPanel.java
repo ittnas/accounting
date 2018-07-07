@@ -147,7 +147,7 @@ public class GraphPanel extends JPanel implements ActionListener{
 		if(main.getDefaultGraphState().getTraceList() != null && main.getDefaultGraphState().getTraceList().size() > 0) {
 			defaultTrace = main.getDefaultGraphState().getTraceList().get(0);
 		} else {
-			main.updateStatus("Oletusuraa ei lˆydy");
+			main.updateStatus("Oletusuraa ei l√∂ydy");
 		}
 		imageScroll = new JScrollPane(null);
 
@@ -226,7 +226,7 @@ public class GraphPanel extends JPanel implements ActionListener{
 		constraintsR.gridx = 1;
 		constraintsL.gridy++;
 		constraintsR.gridy++;
-		JLabel intervalLabel = new JLabel("Aikav‰li");
+		JLabel intervalLabel = new JLabel("Aikav√§li");
 		intervalLabel.setFont(AccountingGUI.font);
 		intervalLabel.setOpaque(false);
 		intervalLabel.setForeground(AccountingGUI.fontColor);
@@ -256,7 +256,7 @@ public class GraphPanel extends JPanel implements ActionListener{
 		basicOptions.add(dateEndField,constraintsR);
 
 		constraintsR.gridx++;
-		JLabel intervalSelectorLabel = new JLabel("Askelv‰li");
+		JLabel intervalSelectorLabel = new JLabel("Askelv√§li");
 		intervalSelectorLabel.setForeground(AccountingGUI.fontColor);
 		intervalSelectorLabel.setFont(AccountingGUI.font);
 		intervalSelectorLabel.setOpaque(false);
@@ -288,7 +288,7 @@ public class GraphPanel extends JPanel implements ActionListener{
 		constraintsR.gridy++;
 		basicOptions.add(accountSelectorLabel,constraintsL);
 
-		addTraceButton = new JButton("Lis‰‰ ura");
+		addTraceButton = new JButton("Lis√§√§ ura");
 		addTraceButton.setForeground(AccountingGUI.fontColor);
 		addTraceButton.setFont(AccountingGUI.font);
 		addTraceButton.addActionListener(this);
@@ -631,21 +631,21 @@ public class GraphPanel extends JPanel implements ActionListener{
 		} catch (NullPointerException e) {
 		} catch (IllegalDateException e) {
 			//dateStartField.setForeground(AccountingGUI.errorColor);
-			//main.updateStatus("Alkup‰iv‰m‰‰r‰ ei kelpaa");
+			//main.updateStatus("Alkup√§iv√§m√§√§r√§ ei kelpaa");
 		}
 		try {
 			endDate = AccountingGUI.parseDate(dateEndField.getText());
 		} catch (NullPointerException e) {
 		} catch (IllegalDateException e) {
 			//dateEndField.setForeground(AccountingGUI.errorColor);
-			//main.updateStatus("Loppup‰iv‰m‰‰r‰ ei kelpaa");
+			//main.updateStatus("Loppup√§iv√§m√§√§r√§ ei kelpaa");
 		}
 		if(startDate != null && endDate != null) {
 			if(startDate.after(endDate)) {
 				Date temp = startDate;
 				startDate = endDate;
 				endDate = temp;
-				main.updateStatus("P‰iv‰m‰‰r‰t olivat v‰‰rinp‰in. Virhe korjattu");
+				main.updateStatus("P√§iv√§m√§√§r√§t olivat v√§√§rinp√§in. Virhe korjattu");
 			}
 		}
 		String stepTypeString = intervalSelector.getSelectedItem().toString();

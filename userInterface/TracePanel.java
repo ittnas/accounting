@@ -83,7 +83,7 @@ public class TracePanel extends JPanel implements ActionListener, ItemListener{
 		traceTypeSelecter.setFont(AccountingGUI.font);
 		add(traceTypeSelecter,traceConst);
 		traceConst.gridx++;
-		addAccountButton = new JButton("Lis‰‰ tili");
+		addAccountButton = new JButton("Lis√§√§ tili");
 		addAccountButton.setForeground(AccountingGUI.fontColor);
 		addAccountButton.setFont(AccountingGUI.font);
 		addAccountButton.addActionListener(this);

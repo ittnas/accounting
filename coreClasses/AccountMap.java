@@ -50,7 +50,7 @@ public class AccountMap {
 	}
 	/*
 	public String[] getAccountNames(boolean withNoChildren) {
-	//TODO tuskin tarvitaan t‰t‰
+	//TODO tuskin tarvitaan t√§t√§
 		String[] names = new String[accounts.size()];
 		int i = 0;
 		if (withNoChildren) {

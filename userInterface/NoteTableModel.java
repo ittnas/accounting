@@ -11,7 +11,7 @@ import dataStructures.SortedList;
 public class NoteTableModel extends AbstractTableModel {
 
 	private SortedList<Note> data;
-	private String[] columnNames = {"P‰iv‰m‰‰r‰", "Tapahtuma", "M‰‰r‰", "Debet-tili", "Credit-tili"};
+	private String[] columnNames = {"P√§iv√§m√§√§r√§", "Tapahtuma", "M√§√§r√§", "Debet-tili", "Credit-tili"};
 	private DateFormat dateFormat;
 	
 	private static final long serialVersionUID = 1L;

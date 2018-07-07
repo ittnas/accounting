@@ -203,7 +203,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		accountManager.setOpaque(false);
 		reports = new JPanel();
 		reports.setOpaque(false);
-		tabbedPane.addTab("P‰iv‰kirja", noteBook);
+		tabbedPane.addTab("P√§iv√§kirja", noteBook);
 		tabbedPane.addTab("Tilien hallinta", accountManager);
 		tabbedPane.addTab("Tilastot", statistics);
 		tabbedPane.addTab("Raportit", reports);
@@ -212,7 +212,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	private JScrollPane createStatusWindow() {
 
-		statusTextArea = new JTextArea(); // PASKAA, pit‰is keksi‰ jokin parempi
+		statusTextArea = new JTextArea(); // PASKAA, pit√§is keksi√§ jokin parempi
 		statusTextArea.setRows(4);
 		statusTextArea.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane();
@@ -227,7 +227,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		JMenu file = new JMenu("Tiedosto");
 		file.setMnemonic(KeyEvent.VK_T);
 		menuBar.add(file);
-		tools = new JMenu("Tyˆkalut");
+		tools = new JMenu("Ty√∂kalut");
 		file.setMnemonic(KeyEvent.VK_K);
 		menuBar.add(tools);
 		newFile = new JMenuItem("Uusi");
@@ -260,7 +260,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		openFile.setMnemonic(KeyEvent.VK_A);
 		openFile.addActionListener(this);
 		file.add(openFile);
-		saveAs = new JMenuItem("Tallenna nimell‰");
+		saveAs = new JMenuItem("Tallenna nimell√§");
 		saveAs.setMnemonic(KeyEvent.VK_V);
 		saveAs.addActionListener(this);
 		file.add(saveAs);
@@ -274,7 +274,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		exit.addActionListener(this);
 		file.add(exit);
 		
-		addNotes = new JMenuItem("Lis‰‰ merkinn‰t tiedostosta");
+		addNotes = new JMenuItem("Lis√§√§ merkinn√§t tiedostosta");
 		addNotes.setMnemonic(KeyEvent.VK_L);
 		addNotes.addActionListener(this);
 		tools.add(addNotes);
@@ -290,7 +290,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	}
 
 	private void initialize() {
-		// TODO k‰sittele virhe, kun defaultPropertiesej‰ ei lˆydy
+		// TODO k√§sittele virhe, kun defaultPropertiesej√§ ei l√∂ydy
 		defaultProps = new Properties();
 		try {
 			FileInputStream in = new FileInputStream("defaultProperties.txt");
@@ -419,15 +419,15 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				new Note(value, date, description, debet, credit);
 				askSave = true;
 				if (e.getSource() == addNoteButton) {
-					String message = "Lis‰ttiin merkint‰ " + description + ".";
+					String message = "Lis√§ttiin merkint√§ " + description + ".";
 					updateStatus(message);
-					//TODO lis‰‰ t‰h‰n fokuksen siirto!
+					//TODO lis√§√§ t√§h√§n fokuksen siirto!
 					panel.getDateField().requestFocus();
 					
 				}
 				if (e.getSource() == editNoteButton) {
 
-					String message = "Muokattiin merkint‰‰ " + description
+					String message = "Muokattiin merkint√§√§ " + description
 							+ ".";
 					updateStatus(message);
 					panel.getNote().remove();
@@ -440,7 +440,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 					searchAccount();
 				}
 			} catch (ParseException ex) {
-				updateStatus("Virheellinen p‰iv‰m‰‰r‰");
+				updateStatus("Virheellinen p√§iv√§m√§√§r√§");
 				return;
 			} catch (NumberFormatException ex) {
 				updateStatus("Virheellinen summa");
@@ -469,7 +469,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			NoteTableModel model = (NoteTableModel) noteTable.getModel();
 			int row = noteTable.getSelectedRow();
 			if (row < 0) {
-				updateStatus("Muokattavaa merkint‰‰ ei ole valittu.");
+				updateStatus("Muokattavaa merkint√§√§ ei ole valittu.");
 			} else {
 				Note selectedNote = model.getNoteAt(row);
 				createEditingWindow(selectedNote);
@@ -480,12 +480,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			NoteTableModel model = (NoteTableModel) noteTable.getModel();
 			int row = noteTable.getSelectedRow();
 			if (row < 0) {
-				updateStatus("Poistettavaa merkint‰‰ ei ole valittu.");
+				updateStatus("Poistettavaa merkint√§√§ ei ole valittu.");
 			} else {
 				Note selectedNote = model.getNoteAt(row);
 				if (approveDeletion()) {
 					selectedNote.remove();
-					String message = "Merkint‰ \""
+					String message = "Merkint√§ \""
 							+ selectedNote.getDescription() + "\" poistettiin.";
 					askSave = true;
 					if (currentSearch != null) {
@@ -496,7 +496,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 					}
 					updateStatus(message);
 				} else {
-					String message = "Merkinn‰n \""
+					String message = "Merkinn√§n \""
 							+ selectedNote.getDescription()
 							+ "\" poistaminen peruttiin.";
 					updateStatus(message);
@@ -508,8 +508,8 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			if (selected != null) {
 				String newName = (String) JOptionPane.showInputDialog(
 						accountManagerTree, String.format(
-								"Nime‰ tili %s uudelleen", selected.getName()),
-						"Nime‰ uudelleen", JOptionPane.INFORMATION_MESSAGE,
+								"Nime√§ tili %s uudelleen", selected.getName()),
+						"Nime√§ uudelleen", JOptionPane.INFORMATION_MESSAGE,
 						null, null, selected.getName());
 				if (newName != null) {
 					String oldName = selected.getName();
@@ -522,11 +522,11 @@ public class AccountingGUI extends JFrame implements ActionListener,
 					updateComboBoxValues(oldName, newName);
 				} else {
 					updateStatus(String.format(
-							"Tilin %s uudelleen nime‰minen peruttiin.",
+							"Tilin %s uudelleen nime√§minen peruttiin.",
 							selected.getName()));
 				}
 			} else {
-				updateStatus("Yht‰‰n tili‰ ei ole valittu.");
+				updateStatus("Yht√§√§n tili√§ ei ole valittu.");
 			}
 		} else if (e.getSource() == changeDescriptionAccountItem) {
 			Account selected = (Account) accountManagerTree.getSelectionPath()
@@ -550,13 +550,13 @@ public class AccountingGUI extends JFrame implements ActionListener,
 							selected.getName()));
 				}
 			} else {
-				updateStatus("Yht‰‰n tili‰ ei ole valittu.");
+				updateStatus("Yht√§√§n tili√§ ei ole valittu.");
 			}
 		} else if (e.getSource() == addChildAccountItem) {
 			if (accountManagerTree.getSelectionPath() != null) {
 				createAddAccountWindow(true);
 			} else {
-				updateStatus("Yht‰‰n tili‰ ei ole valittu.");
+				updateStatus("Yht√§√§n tili√§ ei ole valittu.");
 			}
 
 		} else if (e.getSource() == accountCancelButton) {
@@ -585,7 +585,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				}
 			}
 			accountTree.addAccount(account);
-			updateStatus(String.format("Lis‰ttiin tili %s.", account.getName()));
+			updateStatus(String.format("Lis√§ttiin tili %s.", account.getName()));
 			askSave = true;
 			updateComboBoxValues(null, account.getName());
 			accountManagerTree.setModel(new AccountModel(accountTree.getRoot()));
@@ -603,7 +603,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			if (accountManagerTree.getSelectionPath() != null) {
 				createAddAccountWindow(false);
 			} else {
-				updateStatus("Yht‰‰n tili‰ ei ole valittu.");
+				updateStatus("Yht√§√§n tili√§ ei ole valittu.");
 			}
 		} else if (e.getSource() == removeAccountNotRecursiveItem) {
 			if (accountManagerTree.getSelectionPath() != null) {
@@ -628,10 +628,10 @@ public class AccountingGUI extends JFrame implements ActionListener,
 						tree.updateUI();
 					}
 				} else {
-					updateStatus("Et voi poistaa juuritili‰.");
+					updateStatus("Et voi poistaa juuritili√§.");
 				}
 			} else {
-				updateStatus("Yht‰‰n tili‰ ei ole valittu.");
+				updateStatus("Yht√§√§n tili√§ ei ole valittu.");
 			}
 		} else if (e.getSource() == removeAccountRecursiveItem) {
 			if (accountManagerTree.getSelectionPath() != null) {
@@ -644,7 +644,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 							"Tili %s alatileineen poistettiin.", deletable));
 					askSave = true;
 				} else {
-					updateStatus("Juuritili‰ ei voida poistaa. Sen alatilit on poistettu.");
+					updateStatus("Juuritili√§ ei voida poistaa. Sen alatilit on poistettu.");
 				}
 				
 				if (noteTable != null) {
@@ -660,7 +660,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 					tree.updateUI();
 				}
 			} else {
-				updateStatus("Yht‰‰n tili‰ ei ole valittu.");
+				updateStatus("Yht√§√§n tili√§ ei ole valittu.");
 			}
 		} else if (e.getSource() == addNotes) {
 			addNotesFromFile();
@@ -766,7 +766,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 					}
 				}
             //String input = (String) JOptionPane.showInputDialog(this,
-            //        "Anna tiedoston nimi", "Tallenna nimell‰",
+            //        "Anna tiedoston nimi", "Tallenna nimell√§",
             //        JOptionPane.PLAIN_MESSAGE, null, null, null);
 			/*if (input != null) {
                 {
@@ -834,7 +834,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				}
 			} else {
 				//graphSaveName = saveName + ".grp";
-				updateStatus("Kirjanpitoa vastaavia graafeja ei lˆytynyt");
+				updateStatus("Kirjanpitoa vastaavia graafeja ei l√∂ytynyt");
 				return;
 			}
 			coreClasses.GraphReader grReader = new GraphReader(graphSaveName, getAccountMap());
@@ -909,7 +909,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	}
 	
 	private void createEditingWindow(Note note) {
-		editDialog = new JDialog(this, "Muokkaa merkint‰‰");
+		editDialog = new JDialog(this, "Muokkaa merkint√§√§");
 		AddNotePanel contentPane = new AddNotePanel(accountTree, note);
 		editNoteButton = new JButton("Muokkaa");
 		editNoteButton.setForeground(fontColor);
@@ -933,7 +933,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		addAccount.addButton(accountOkButton);
 		addAccount.addButton(accountCancelButton);
 		JDialog dialog = new JDialog(this);
-		dialog.setTitle("Lis‰‰ uusi tili");
+		dialog.setTitle("Lis√§√§ uusi tili");
 		dialog.setContentPane(addAccount);
 		dialog.setLocationRelativeTo(accountManagerTree);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -990,7 +990,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				start = dateFormat.parse(startDateText);
 			}
 		} catch (ParseException err) {
-			updateStatus("Huono p‰iv‰m‰‰r‰!");
+			updateStatus("Huono p√§iv√§m√§√§r√§!");
 			return;
 		}
 		Date end = null;
@@ -1001,12 +1001,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				end = dateFormat.parse(endDateText);
 			}
 		} catch (ParseException err) {
-			updateStatus("Huono p‰iv‰m‰‰r‰!");
+			updateStatus("Huono p√§iv√§m√§√§r√§!");
 			return;
 		}
 		if (!accountTree.getAccounts().containsKey(accountName)) {
 
-			// N‰m‰ tehd‰‰n jo toisaalla
+			// N√§m√§ tehd√§√§n jo toisaalla
 			// String message = "No account called " + account + ".";
 			// updateStatus(message);
 			return;
@@ -1018,7 +1018,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			Date temp = start;
 			start = end;
 			end = temp;
-			updateStatus("P‰iv‰m‰‰r‰t v‰‰rin p‰in.");
+			updateStatus("P√§iv√§m√§√§r√§t v√§√§rin p√§in.");
 		}
 		// Notes in reversed order, so end and start are reversed too.
 		SortedList<Note> notes = accountTree.getNotesInRange(account, end,
@@ -1065,11 +1065,11 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private AddNotePanel createAddNotePanel() {
 		addNotePanel = new AddNotePanel(accountTree, null);
 		addNotePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-				.createLineBorder(lineColor), "Lis‰‰ merkint‰",
+				.createLineBorder(lineColor), "Lis√§√§ merkint√§",
 				TitledBorder.LEFT, TitledBorder.TOP, boldFont, fontColor));
 		addComboboxToUpdateList(addNotePanel.getDebetAccountCombobox());
 		addComboboxToUpdateList(addNotePanel.getCreditAccountCombobox());
-		addNoteButton = new JButton("Lis‰‰");
+		addNoteButton = new JButton("Lis√§√§");
 		addNoteButton.setOpaque(false);
 		addNoteButton.setForeground(fontColor);
 		addNoteButton.addActionListener(this);
@@ -1090,10 +1090,10 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		/*
 		 * addNotePanel = new JPanel();
 		 * addNotePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-		 * .createLineBorder(lineColor), "Lis‰‰ merkint‰", TitledBorder.LEFT,
+		 * .createLineBorder(lineColor), "Lis√§√§ merkint√§", TitledBorder.LEFT,
 		 * TitledBorder.TOP, boldFont, fontColor));
 		 * addNotePanel.setOpaque(false); addNotePanel.setLayout(new
-		 * GridBagLayout()); JLabel dateLabel = new JLabel("P‰iv‰m‰‰r‰");
+		 * GridBagLayout()); JLabel dateLabel = new JLabel("P√§iv√§m√§√§r√§");
 		 * dateLabel.setFont(font); dateLabel.setOpaque(false);
 		 * dateLabel.setForeground(fontColor); dateField = new
 		 * JFormattedTextField(createMaskFormatter());
@@ -1128,7 +1128,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		 * descriptionField.setColumns(12);
 		 * descriptionField.setForeground(fontColor);
 		 * 
-		 * addNoteButton = new JButton("Lis‰‰"); addNoteButton.setOpaque(false);
+		 * addNoteButton = new JButton("Lis√§√§"); addNoteButton.setOpaque(false);
 		 * addNoteButton.setForeground(fontColor);
 		 * addNoteButton.addActionListener(this);
 		 * 
@@ -1190,7 +1190,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		accountChooserPanel.setOpaque(false);
 		accountChooserPanel.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createLineBorder(lineColor),
-				"N‰yt‰ tapahtumahistoria", TitledBorder.LEFT, TitledBorder.TOP,
+				"N√§yt√§ tapahtumahistoria", TitledBorder.LEFT, TitledBorder.TOP,
 				boldFont, fontColor));
 		accountChooserPanel.setLayout(new GridBagLayout());
 		JLabel nameLabel = new JLabel("Tili");
@@ -1298,7 +1298,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	 * notePanel.setLayout(new BoxLayout(notePanel, BoxLayout.Y_AXIS)); if
 	 * (notes.size() == 0) {
 	 * 
-	 * JTextField noNotes = new JTextField("Ei merkintˆj‰");
+	 * JTextField noNotes = new JTextField("Ei merkint√§j√§");
 	 * noNotes.setFont(boldFont); noNotes.setForeground(fontColor);
 	 * noNotes.setBorder(BorderFactory.createEmptyBorder());
 	 * noNotes.setEditable(false); notePanel.add(noNotes); } for (Note note :
@@ -1349,23 +1349,23 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	private void createEditAccountsMenu() {
 		accountMenu = new JPopupMenu();
-		renameAccountItem = new JMenuItem("Nime‰ uudelleen");
+		renameAccountItem = new JMenuItem("Nime√§ uudelleen");
 		renameAccountItem.addActionListener(this);
 		renameAccountItem.setForeground(fontColor);
 		changeDescriptionAccountItem = new JMenuItem("Muuta kuvausta");
 		changeDescriptionAccountItem.addActionListener(this);
 		changeDescriptionAccountItem.setForeground(fontColor);
-		addChildAccountItem = new JMenuItem("Lis‰‰ alatili");
+		addChildAccountItem = new JMenuItem("Lis√§√§ alatili");
 		addChildAccountItem.addActionListener(this);
 		addChildAccountItem.setForeground(fontColor);
-		addAccountInPlaceItem = new JMenuItem("Lis‰‰ tili vanhan paikalle");
+		addAccountInPlaceItem = new JMenuItem("Lis√§√§ tili vanhan paikalle");
 		addAccountInPlaceItem.addActionListener(this);
 		addAccountInPlaceItem.setForeground(fontColor);
 		removeAccountNotRecursiveItem = new JMenuItem("Poista tili");
 		removeAccountNotRecursiveItem.addActionListener(this);
 		removeAccountNotRecursiveItem.setForeground(fontColor);
 		removeAccountRecursiveItem = new JMenuItem(
-				"Poista tili sek‰ kaikki alitilit");
+				"Poista tili sek√§ kaikki alitilit");
 		removeAccountRecursiveItem.addActionListener(this);
 		removeAccountRecursiveItem.setForeground(fontColor);
 
@@ -1391,7 +1391,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		TableColumnModel tcm = noteTable.getColumnModel();
 		tcm.getColumn(2).setCellRenderer(r);
 		
-		//TODO alignment ei s‰ily
+		//TODO alignment ei s√§ily
 		scrollPane = new JScrollPane(noteTable);
 		noteTable.setFillsViewportHeight(true);
 		createEditNoteMenu();

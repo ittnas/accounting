@@ -267,7 +267,7 @@ do {
 	}
 } while ((line = br.readLine()) != null);
 if (line == null) {
-	setError("Aloitussulkua ei löytynyt");
+	setError("Aloitussulkua ei lÃ¶ytynyt");
 	throw new NoBracketException();
 }
 return line;

@@ -41,7 +41,7 @@ public class AddNotePanel extends JPanel implements ActionListener, FocusListene
 		selectedNote = note;
 		this.setOpaque(false);
 		this.setLayout(new GridBagLayout());
-		JLabel dateLabel = new JLabel("P‰iv‰m‰‰r‰");
+		JLabel dateLabel = new JLabel("P√§iv√§m√§√§r√§");
 		dateLabel.setFont(AccountingGUI.font);
 		dateLabel.setOpaque(false);
 		dateLabel.setForeground(AccountingGUI.fontColor);

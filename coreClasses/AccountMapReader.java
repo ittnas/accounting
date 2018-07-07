@@ -82,9 +82,9 @@ public class AccountMapReader {
 			String valueStr = null;
 
 			if (words.length != 5 && words.length > 0) {
-				setError(String.format("Virheellinen merkint‰ %s.", words[0]));
+				setError(String.format("Virheellinen merkint√§ %s.", words[0]));
 			} else if (words.length != 5) {
-				setError("Virheellinen merkint‰.");
+				setError("Virheellinen merkint√§.");
 			} else {
 				description = words[0];
 				dateStr = words[1];
@@ -96,7 +96,7 @@ public class AccountMapReader {
 					dateValue = Long.parseLong(dateStr);
 				} catch (NumberFormatException ex) {
 					setError(String.format(
-							"Merkinn‰n %s p‰iv‰m‰‰r‰ on virheellinen.",
+							"Merkinn√§n %s p√§iv√§m√§√§r√§ on virheellinen.",
 							description));
 					continue;
 				}
@@ -106,7 +106,7 @@ public class AccountMapReader {
 					debet = map.getAccount(debetStr);
 				} else {
 					setError(String.format(
-							"Merkinn‰n %s debet-tili on virheellinen",
+							"Merkinn√§n %s debet-tili on virheellinen",
 							description));
 					continue;
 				}
@@ -115,7 +115,7 @@ public class AccountMapReader {
 					credit = map.getAccount(creditStr);
 				} else {
 					setError(String.format(
-							"Merkinn‰n %s credit-tili on virheellinen",
+							"Merkinn√§n %s credit-tili on virheellinen",
 							description));
 					continue;
 				}
@@ -125,7 +125,7 @@ public class AccountMapReader {
 					value = Double.parseDouble(valueStr);
 				} catch (NumberFormatException ex) {
 					setError(String.format(
-							"Merkinn‰n %s arvo on virheellinen.", description));
+							"Merkinn√§n %s arvo on virheellinen.", description));
 					continue;
 				}
 				new Note(value, date, description, debet, credit);
@@ -170,7 +170,7 @@ public class AccountMapReader {
 				}
 				if (words.length > 3) {
 					setWarning(String.format(
-							"Tilill‰ %s on liikaa argumentteja", words[0]));
+							"Tilill√§ %s on liikaa argumentteja", words[0]));
 					name = words[0];
 					parent = words[1];
 					description = words[2];
@@ -193,7 +193,7 @@ public class AccountMapReader {
 				} else {
 					if(parent.equals("")) {
 						if(root != null) {
-							setWarning("Tilipuussa on useampia juuritilej‰.");
+							setWarning("Tilipuussa on useampia juuritilej√§.");
 						}
 						root = newAccount;
 					} else {
@@ -206,7 +206,7 @@ public class AccountMapReader {
 		} while (((line = br.readLine()) != null) && !end);
 		map = new AccountMap(accounts);
 		if(root == null) {
-			setWarning("Juuri-tili‰ ei lˆytynyt");
+			setWarning("Juuri-tili√§ ei l√∂ytynyt");
 			throw new BadFileException();
 		}
 		map.setRoot(root);
@@ -229,7 +229,7 @@ public class AccountMapReader {
 			}
 		} while ((line = br.readLine()) != null);
 		if (line == null) {
-			setError("Aloitussulkua ei lˆytynyt");
+			setError("Aloitussulkua ei l√∂ytynyt");
 			throw new NoBracketException();
 		}
 		return line;

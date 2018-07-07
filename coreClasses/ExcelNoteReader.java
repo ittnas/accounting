@@ -50,21 +50,21 @@ public class ExcelNoteReader {
 					noteStrings[5] = "";
 				} else if (noteStrings.length != 6) {
 					setError(String.format(
-							"Merkint‰ %s on viallinen ja se ohitetaan.",
+							"Merkint√§ %s on viallinen ja se ohitetaan.",
 							noteStrings[0]));
 					continue;
 				}
 				Account debet = map.getAccount(noteStrings[3]);
 				if (debet == null) {
 					setWarning(String.format(
-							"Merkinn‰n %s debet-tili‰ ei lˆytynyt. Merkinn‰n tili oli %s",
+							"Merkinn√§n %s debet-tili√§ ei l√∂ytynyt. Merkinn√§n tili oli %s",
 							noteStrings[1], noteStrings[3]));
 					continue;
 				}
 				Account credit = map.getAccount(noteStrings[4]);
 				if (credit == null) {
 					setWarning(String.format(
-							"Merkinn‰n %s credit-tili‰ ei lˆytynyt. Merkinn‰n tili oli %s",
+							"Merkinn√§n %s credit-tili√§ ei l√∂ytynyt. Merkinn√§n tili oli %s",
 							noteStrings[1], noteStrings[4]));
 					continue;
 				}
@@ -73,7 +73,7 @@ public class ExcelNoteReader {
 					date = AccountingGUI.dateFormat.parse(noteStrings[0]);
 				} catch (ParseException e) {
 					setWarning(String.format(String.format(
-							"Merkinn‰n %s p‰iv‰ys on virheellinen.",
+							"Merkinn√§n %s p√§iv√§ys on virheellinen.",
 							noteStrings[1])));
 					continue;
 				}
@@ -82,7 +82,7 @@ public class ExcelNoteReader {
 					value = Double.parseDouble(noteStrings[2]);
 				} catch (NumberFormatException e) {
 					setWarning(String.format(String.format(
-							"Merkinn‰n %s arvo on virheellinen.",
+							"Merkinn√§n %s arvo on virheellinen.",
 							noteStrings[1])));
 				}
 				output.add(new NoteHolder(value, date, noteStrings[1], debet,
