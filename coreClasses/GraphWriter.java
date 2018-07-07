@@ -69,7 +69,8 @@ public class GraphWriter {
 		   }
 		   String endString = null;
 		   if(state.getEndDate() != null) {
-			   endString = AccountingGUI.dateFormat.format(state.getEndDate());
+			   //endString = AccountingGUI.dateFormat.format(state.getEndDate());
+			   endString = Long.toString(state.getEndDate().getTime());
 		   } else {
 			   endString = "null";
 		   }
