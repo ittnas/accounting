@@ -25,10 +25,13 @@ import java.awt.event.WindowListener;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -115,6 +118,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private JMenuItem exit;
 	private Properties defaultProps;
 	private Properties applicationProps;
+	private Properties cache;
 	public static int fontSize;
 	public static Color fontColor;
 	public static Font font;
@@ -233,7 +237,11 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		newFile = new JMenuItem("Uusi");
 		newFile.setMnemonic(KeyEvent.VK_U);
 		//fc = new JFileChooser(".");
-		fc = new JFileChooser("."){
+		String initialPath = cache.getProperty("openFilePath");
+		if(initialPath == null || Files.notExists(Paths.get(initialPath))) {
+			initialPath = ".";
+		}
+		fc = new JFileChooser(initialPath){
 			@Override
 			public void approveSelection(){
 			    File f = getSelectedFile();
@@ -307,6 +315,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			in = new FileInputStream("Properties.txt");
 			applicationProps.load(in);
 			in.close();
+			
 			try {
 				fontSize = Integer.parseInt(applicationProps
 						.getProperty("fontSize"));
@@ -318,6 +327,17 @@ public class AccountingGUI extends JFrame implements ActionListener,
 					.print("File defaultProperties.txt was not found or could not be read.\n");
 			System.exit(ERROR);
 		}
+		
+		cache = new Properties();
+		FileInputStream in;
+		try {
+			in = new FileInputStream("cache.txt");
+			cache.load(in);
+			in.close();
+		} catch (IOException e) {
+			// Cache.txt could not be found. Not a problem.
+		}
+
 		try {
 			dateFormat = new SimpleDateFormat(applicationProps
 					.getProperty("dateFormat"));
@@ -389,8 +409,19 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            File file = fc.getSelectedFile();
 
-	            fileName = file.getPath(); 
+	            fileName = file.getPath();
 	            openFile(fileName,fileName);
+	            
+	            try {
+	            File fn = new File(fileName);
+	            cache.setProperty("openFilePath", fn.getParent());
+	            File cacheFile = new File("cache.txt");
+	            cacheFile.createNewFile();
+	            cache.store(new FileOutputStream("cache.txt"),null);
+	            } catch (IOException er) {
+	            	// Do nothing
+	            }
+	            
 	        }
 
 		} else if (e.getSource() == save) {
