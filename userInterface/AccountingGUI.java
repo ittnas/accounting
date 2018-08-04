@@ -143,6 +143,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private JPanel accountChooserPanel;
 	private JTable noteTable;
 	private JPopupMenu editMenu;
+	private JDialog addNotesFromTableDialog;
 	private JMenuItem editNoteItem;
 	private JMenuItem deleteNoteItem;
 	private String[] currentSearch;
@@ -168,6 +169,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private String saveName;
 	private boolean askSave = false;
 	private JMenuItem addNotes;
+	private JMenuItem addNotesFromTable;
 	private JMenu tools;
 	private JPanel statisticsMainPanel;
 	public GraphState defaultGraphState;
@@ -286,6 +288,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		addNotes.setMnemonic(KeyEvent.VK_L);
 		addNotes.addActionListener(this);
 		tools.add(addNotes);
+		tools.setEnabled(false);
+		
+		addNotesFromTable = new JMenuItem("Lisää merkinnät taulukosta");
+		addNotesFromTable.setMnemonic(KeyEvent.VK_I);
+		addNotesFromTable.addActionListener(this);
+		tools.add(addNotesFromTable);
 		tools.setEnabled(false);
 		return menuBar;
 	}
@@ -695,11 +703,17 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			}
 		} else if (e.getSource() == addNotes) {
 			addNotesFromFile();
+		} else if (e.getSource() == addNotesFromTable) {
+			addNotesFromTable();
 		}
 	}
 
 	private void addNotesFromFile() {
-		JFileChooser chooser = new JFileChooser();
+		String initialPath = cache.getProperty("openFilePath");
+		if(initialPath == null || Files.notExists(Paths.get(initialPath))) {
+			initialPath = ".";
+		}
+		JFileChooser chooser = new JFileChooser(initialPath);
 		int returnVal = chooser.showOpenDialog(this);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
@@ -714,6 +728,41 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		}
 		
 	}
+	
+	private void addNotesFromTable() {
+		String initialPath = cache.getProperty("openFilePath");
+		if(initialPath == null || Files.notExists(Paths.get(initialPath))) {
+			initialPath = ".";
+		}
+		JFileChooser chooser = new JFileChooser(initialPath);
+		int returnVal = chooser.showOpenDialog(this);
+		if(returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = chooser.getSelectedFile();
+			createAddNotesFromTableDialog();
+			//TableNoteReader reader = new TableNoteReader(file.getAbsoluteFile());
+		}
+	}
+	
+	//TODO Continue from here!
+	private void createAddNotesFromTableDialog() {
+		addNotesFromTableDialog = new JDialog(this, "Lisää merkinnät taulukosta");
+		/*
+		AddNotePanel contentPane = new AddNotePanel(accountTree, note);
+		editNoteButton = new JButton("Muokkaa");
+		editNoteButton.setForeground(fontColor);
+		editNoteButton.setFont(font);
+		editNoteButton.addActionListener(this);
+
+		contentPane.addButton(editNoteButton);
+		editDialog.setContentPane(contentPane);
+		editDialog.setLocationRelativeTo(this);
+		editDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		*/
+		addNotesFromTableDialog.pack();
+		addNotesFromTableDialog.setVisible(true);
+		
+	}
+
 
 	private void save() {
 		if(saveName == null) {
