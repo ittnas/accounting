@@ -997,6 +997,16 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		editNoteButton.setForeground(fontColor);
 		editNoteButton.setFont(font);
 		editNoteButton.addActionListener(this);
+		
+		Action accept = new AbstractAction() {
+		    public void actionPerformed(ActionEvent e) {
+		       ((JButton)e.getSource()).doClick();
+		    }
+		};
+
+		editNoteButton.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		editNoteButton.getActionMap().put("pressed",
+                accept);
 
 		contentPane.addButton(editNoteButton);
 		editDialog.setContentPane(contentPane);
@@ -1860,11 +1870,16 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	public AccountMap getAccountMap() {
 		return accountTree;
 	}
-	
+	/**
+	 * Adds the combo box to the list of boxes whose names will be updated when a new account is created.
+	 **/
 	public void addComboboxToUpdateList(Java2sAutoComboBox box) {
 		comboboxUpdateList.add(box);
 	}
 	
+	/**
+	 * Removes the combo box from the list of boxes whose names will be updated when a new account is created.
+	 **/
 	public boolean removeFromComboboxUpdateList(Java2sAutoComboBox box) {
 		return comboboxUpdateList.remove(box);
 	}
