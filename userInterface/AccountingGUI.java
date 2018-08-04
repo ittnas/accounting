@@ -735,29 +735,31 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			initialPath = ".";
 		}
 		JFileChooser chooser = new JFileChooser(initialPath);
+		chooser.setDialogTitle("Valitse tiedosto, josta merkinnät lisätään.");
 		int returnVal = chooser.showOpenDialog(this);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			createAddNotesFromTableDialog();
+			
 			//TableNoteReader reader = new TableNoteReader(file.getAbsoluteFile());
+			ArrayList<NoteHolder> notes = new ArrayList<NoteHolder>();//ArrayList<NoteHolder> notes = reader.readNotes();
+			
+			createAddNotesFromTableDialog(notes);
+			
 		}
 	}
 	
 	//TODO Continue from here!
-	private void createAddNotesFromTableDialog() {
+	private void createAddNotesFromTableDialog(ArrayList<NoteHolder> notes) {
 		addNotesFromTableDialog = new JDialog(this, "Lisää merkinnät taulukosta");
-		/*
-		AddNotePanel contentPane = new AddNotePanel(accountTree, note);
-		editNoteButton = new JButton("Muokkaa");
-		editNoteButton.setForeground(fontColor);
-		editNoteButton.setFont(font);
-		editNoteButton.addActionListener(this);
+		
+		CreateNoteFromTablePanel contentPane = new CreateNoteFromTablePanel(accountTree, notes);
+		addNotesFromTableDialog.setForeground(fontColor);
+		addNotesFromTableDialog.setFont(font);
 
-		contentPane.addButton(editNoteButton);
-		editDialog.setContentPane(contentPane);
-		editDialog.setLocationRelativeTo(this);
-		editDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		*/
+		addNotesFromTableDialog.setContentPane(contentPane);
+		addNotesFromTableDialog.setLocationRelativeTo(this);
+		addNotesFromTableDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
 		addNotesFromTableDialog.pack();
 		addNotesFromTableDialog.setVisible(true);
 		

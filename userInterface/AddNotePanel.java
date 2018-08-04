@@ -95,7 +95,7 @@ public class AddNotePanel extends JPanel implements ActionListener, FocusListene
 		descriptionField.setColumns(12);
 		descriptionField.setForeground(AccountingGUI.fontColor);
 		descriptionField.setFont(AccountingGUI.font);
-		descriptionLabel.addFocusListener(this);
+		descriptionField.addFocusListener(this);
 
 		constraints = new GridBagConstraints(0, 0, 1, 1, 1,
 				1, GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -187,8 +187,8 @@ public class AddNotePanel extends JPanel implements ActionListener, FocusListene
 
 	@Override
 	public void focusGained(FocusEvent e) {
-			((JTextField)(e.getSource())).setCaretPosition(0);
-		
+			//((JTextField)(e.getSource())).setCaretPosition(0);
+			((JTextField)(e.getSource())).selectAll();		
 	}
 
 	@Override
