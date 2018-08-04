@@ -1,22 +1,23 @@
-DONE 1. Lisää tilien summa päiväkirjan tilinäkymään.
-DONE 2. Kun vaihtaa tilinäkymästä päiväkirjaan on tilivalitsimen tili pallannut oletusarvoonsa.
-CANCELLED 3. Päivämäärän valitsin täyttyy ikävästi välilyönneistä.
-DONE 4. Kun lisää tilin olisi kiva päästä takaisin päivämäärän asetukseen.
-DONE 5. Lisätyt tilit tulevat valikkoihin kahteen kertaan.
-6. Ikkunoinoita pitäisi voida pienentää ja suurentaa vähän niinkuin eclipsessä.
-PARTLY 7. Tilastot ja raportit pitäisi tehdä.
-DONE 8. Tee tallenna nimellä toiminnosta parempi.
-9. Tilienhallintapuu ei reagoi järkevästi ikkunan kasvattamiseen ja pienentämiseen.
-DONE 10. Kun tili poistetaan, näkyy se vielä vetolaatikoissa. PAHA.
+DONE 1. LisÃ¤Ã¤ tilien summa pÃ¤ivÃ¤kirjan tilinÃ¤kymÃ¤Ã¤n.
+DONE 2. Kun vaihtaa tilinÃ¤kymÃ¤stÃ¤ pÃ¤ivÃ¤kirjaan on tilivalitsimen tili pallannut oletusarvoonsa.
+CANCELLED 3. PÃ¤ivÃ¤mÃ¤Ã¤rÃ¤n valitsin tÃ¤yttyy ikÃ¤vÃ¤sti vÃ¤liliÃ¶nneistÃ¤.
+DONE 4. Kun lisÃ¤Ã¤ tilin olisi kiva pï¿½ï¿½stï¿½ takaisin pï¿½ivï¿½mï¿½ï¿½rï¿½n asetukseen.
+DONE 5. Lisï¿½tyt tilit tulevat valikkoihin kahteen kertaan.
+6. Ikkunoinoita pitï¿½isi voida pienentï¿½ï¿½ ja suurentaa vï¿½hï¿½n niinkuin eclipsessï¿½.
+PARTLY 7. Tilastot ja raportit pitï¿½isi tehdï¿½.
+DONE 8. Tee tallenna nimellï¿½ toiminnosta parempi.
+9. Tilienhallintapuu ei reagoi jï¿½rkevï¿½sti ikkunan kasvattamiseen ja pienentï¿½miseen.
+DONE 10. Kun tili poistetaan, nï¿½kyy se vielï¿½ vetolaatikoissa. PAHA.
 11. Laita avausdialogi osoittamaan tili-kansioon
 12. Kun tilivalitsin valitaan tabilla, laita alkuun
-13. Laita pikanäppäimet kuntoon: keyboard event -> perform action. Toiminto riippuu lähteestä, kohdistuu kohteeseen
+13. Laita pikanï¿½ppï¿½imet kuntoon: keyboard event -> perform action. Toiminto riippuu lï¿½hteestï¿½, kohdistuu kohteeseen
 DONE 14. Kaatuu, jos avattava tiedosto on viallinen
 15. ei inputin tarkistusta!!! TIETOTURVA = 0
 16. Etsi-toiminto
-DONE 17. Kaatuu, jos nimeää tilin uudelleen ja käyttää vanhaa tiliä. Se ei poistu listasta, vaikka uusi tili syntyykin. Uudelle tilille tehdyt merkinnät ei ilmeisesti tule lainkaan.
-DONE 18. Kuvaajan piirtämisessä tilin poistaminen ei muuta relative accounting kohdetta.
-DONE 19. Jos kaikki tilit poistetaan, on ensimmäisen numero 0.
-DONE 20. Statistics: aikaväli voi olla negatiivinen
-21. Statistics: kun graafit luetaan tiedostostosta, pitäisi se tulla kokonaan näkyviin. Vaikea toteuttaa, koska split barin sijainnin voi määrätä vasta kun se on näkyvissä.
-DONE 22. BUGI: lisää pie-chart. Lisää uusi ura ja line-chart -> kaatuu
+DONE 17. Kaatuu, jos nimeï¿½ï¿½ tilin uudelleen ja kï¿½yttï¿½ï¿½ vanhaa tiliï¿½. Se ei poistu listasta, vaikka uusi tili syntyykin. Uudelle tilille tehdyt merkinnï¿½t ei ilmeisesti tule lainkaan.
+DONE 18. Kuvaajan piirtï¿½misessï¿½ tilin poistaminen ei muuta relative accounting kohdetta.
+DONE 19. Jos kaikki tilit poistetaan, on ensimmï¿½isen numero 0.
+DONE 20. Statistics: aikavï¿½li voi olla negatiivinen
+21. Statistics: kun graafit luetaan tiedostostosta, pitï¿½isi se tulla kokonaan nï¿½kyviin. Vaikea toteuttaa, koska split barin sijainnin voi mï¿½ï¿½rï¿½tï¿½ vasta kun se on nï¿½kyvissï¿½.
+DONE 22. BUGI: lisï¿½ï¿½ pie-chart. Lisï¿½ï¿½ uusi ura ja line-chart -> kaatuu
+23. Improve loggin: show date and time of each event and save it to a file for better traceability.

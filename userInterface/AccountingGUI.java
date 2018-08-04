@@ -91,6 +91,7 @@ import coreClasses.GraphState;
 import coreClasses.GraphWriter;
 import coreClasses.Note;
 import coreClasses.NoteHolder;
+import coreClasses.TableNoteReader;
 import coreClasses.Template;
 import coreClasses.GraphState.StepType;
 import dataStructures.SortedList;
@@ -740,8 +741,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
 			
-			//TableNoteReader reader = new TableNoteReader(file.getAbsoluteFile());
-			ArrayList<NoteHolder> notes = new ArrayList<NoteHolder>();//ArrayList<NoteHolder> notes = reader.readNotes();
+			TableNoteReader reader = new TableNoteReader(file);
+			ArrayList<NoteHolder> notes = reader.readNotes();
+			updateStatus(reader.printErrors());
+			if(reader.getErrorCount() == 0) {
+				updateStatus(String.format("Onnistuneesti luettu %d merkintää tiedostosta %s.",notes.size(),file.getAbsolutePath()));
+			}
 			
 			createAddNotesFromTableDialog(notes);
 			
@@ -751,6 +756,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	//TODO Continue from here!
 	private void createAddNotesFromTableDialog(ArrayList<NoteHolder> notes) {
 		addNotesFromTableDialog = new JDialog(this, "Lisää merkinnät taulukosta");
+		addNotesFromTableDialog.setModal(true);
 		
 		CreateNoteFromTablePanel contentPane = new CreateNoteFromTablePanel(accountTree, notes);
 		addNotesFromTableDialog.setForeground(fontColor);
@@ -992,6 +998,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	
 	private void createEditingWindow(Note note) {
 		editDialog = new JDialog(this, "Muokkaa merkintää");
+		editDialog.setModal(true);
 		AddNotePanel contentPane = new AddNotePanel(accountTree, note);
 		editNoteButton = new JButton("Muokkaa");
 		editNoteButton.setForeground(fontColor);
