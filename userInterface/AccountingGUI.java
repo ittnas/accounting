@@ -180,6 +180,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private SequentialGroup horizontal;
 	private JPanel reports;
 	private Java2sAutoComboBox templateSelector;
+	private SimpleDateFormat messageWindowDateFormat;
 
 	public AccountingGUI() {
 		super();
@@ -353,6 +354,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		} catch (IllegalArgumentException e) {
 			dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		}
+		try {
+			messageWindowDateFormat = new SimpleDateFormat(applicationProps
+						.getProperty("messageWindowDateFormat"));
+		} catch (IllegalArgumentException e) {
+			messageWindowDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		}
 		fontColor = parseColor("fontColor");
 		lineColor = parseColor("lineColor");
 		errorColor = parseColor("errorColor");
@@ -461,7 +468,6 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				if (e.getSource() == addNoteButton) {
 					String message = "Lisättiin merkintä " + description + ".";
 					updateStatus(message);
-					//TODO lisää tähän fokuksen siirto!
 					panel.getDateField().requestFocus();
 					
 				}
@@ -749,16 +755,22 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			}
 			
 			createAddNotesFromTableDialog(notes);
+			if (currentSearch != null) {
+				setNoteTableContent(currentSearch[0], currentSearch[1],
+						currentSearch[2]);
+			} else {
+				searchAccount();
+			}
+			askSave = true;
 			
 		}
 	}
-	
-	//TODO Continue from here!
+
 	private void createAddNotesFromTableDialog(ArrayList<NoteHolder> notes) {
 		addNotesFromTableDialog = new JDialog(this, "Lisää merkinnät taulukosta");
 		addNotesFromTableDialog.setModal(true);
 		
-		CreateNoteFromTablePanel contentPane = new CreateNoteFromTablePanel(accountTree, notes);
+		CreateNoteFromTablePanel contentPane = new CreateNoteFromTablePanel(accountTree, notes,this);
 		addNotesFromTableDialog.setForeground(fontColor);
 		addNotesFromTableDialog.setFont(font);
 
@@ -1046,10 +1058,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	}
 
 	public void updateStatus(String message) {
+		String dateString = messageWindowDateFormat.format(new Date());
+		String fullMessage = dateString + ": " + message;
 		if (message.endsWith("\n")) {
-			statusTextArea.append(message);
+			statusTextArea.append(fullMessage);
 		} else {
-			statusTextArea.append(message + "\n");
+			statusTextArea.append(fullMessage + "\n");
 		}
 	}
 

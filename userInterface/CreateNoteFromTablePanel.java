@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,17 +8,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ComboBoxEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
+import coreClasses.Account;
 import coreClasses.AccountMap;
 import coreClasses.Note;
 import coreClasses.NoteHolder;
@@ -33,25 +40,31 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	private Java2sAutoComboBox sourceAccountComboBox;
 	private Java2sAutoComboBox targetAccountComboBox;
 	private JTextField descriptionField;
+	private JLabel numberLabel;
 	
 	private AccountMap accountTree;
 	private ArrayList<NoteHolder> notes;
+	private AccountingGUI GUI;
 	private GridBagConstraints constraints;
 	private JButton addNoteButton;
 	private JButton skipNoteButton;
 	private JButton skipAllButton;
+	private JButton addAllButton;
+	private int currentNote = 1;
 
-	public CreateNoteFromTablePanel(AccountMap accountTree, ArrayList<NoteHolder> notes) {
+	public CreateNoteFromTablePanel(AccountMap accountTree, ArrayList<NoteHolder> notes,AccountingGUI GUI) {
 		super();
 		this.accountTree = accountTree;
 		this.notes = notes;
+		this.GUI = GUI;
 		this.setOpaque(false);
 		this.setLayout(new GridBagLayout());
 		
-		JLabel numberLabel = new JLabel("");
+		numberLabel = new JLabel("");
 		numberLabel.setFont(AccountingGUI.font);
 		numberLabel.setOpaque(false);
 		numberLabel.setForeground(AccountingGUI.fontColor);
+		numberLabel.setPreferredSize(new Dimension(300,20));
 		setNoteNumber(numberLabel, 1, notes.size());
 		
 		JLabel dateLabel = new JLabel("Päivämäärä");
@@ -81,12 +94,30 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		sourceAccountLabel.setOpaque(false);
 		sourceAccountLabel.setForeground(AccountingGUI.fontColor);
 		ArrayList<String> accountNames = accountTree.getAccountNames(false);
+		
+		FocusListener fl = new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				ComboBoxEditor editor = ((JComboBox<Account>)e.getSource()).getEditor();
+		        JTextField textField = (JTextField)editor.getEditorComponent();
+		        textField.setCaretPosition(0);
+			}
+		};
+		
 		sourceAccountComboBox = new Java2sAutoComboBox(accountNames);
 		sourceAccountComboBox.setEditable(true);
 		sourceAccountComboBox.addActionListener(this);
 		sourceAccountComboBox.setFont(AccountingGUI.font);
 		sourceAccountComboBox.setForeground(AccountingGUI.fontColor);
-		sourceAccountComboBox.addFocusListener(this);
+		sourceAccountComboBox.addFocusListener(fl);
+
 		
 		JLabel targetAccountLabel = new JLabel("Kohdetili");
 		targetAccountLabel.setFont(AccountingGUI.font);
@@ -98,7 +129,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		targetAccountComboBox.addActionListener(this);
 		targetAccountComboBox.setFont(AccountingGUI.font);
 		targetAccountComboBox.setForeground(AccountingGUI.fontColor);
-		targetAccountComboBox.addFocusListener(this);
+		targetAccountComboBox.addFocusListener(fl);
 		
 		JLabel descriptionLabel = new JLabel("Kuvaus");
 		descriptionLabel.setFont(AccountingGUI.font);
@@ -106,7 +137,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		descriptionLabel.setForeground(AccountingGUI.fontColor);
 		descriptionField = new JTextField();
 		descriptionField.setOpaque(true);
-		descriptionField.setColumns(12);
+		descriptionField.setColumns(20);
 		descriptionField.setForeground(AccountingGUI.fontColor);
 		descriptionField.setFont(AccountingGUI.font);
 		descriptionField.addFocusListener(this);
@@ -115,6 +146,11 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		addNoteButton.setForeground(AccountingGUI.fontColor);
 		addNoteButton.setFont(AccountingGUI.font);
 		addNoteButton.addActionListener(this);
+		
+		addAllButton = new JButton("Lisää kaikki");
+		addAllButton.setForeground(AccountingGUI.fontColor);
+		addAllButton.setFont(AccountingGUI.font);
+		addAllButton.addActionListener(this);
 		
 		// Enables activating the button by pressing enter when it is focused
 		@SuppressWarnings("serial")
@@ -142,8 +178,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 				1, GridBagConstraints.WEST, GridBagConstraints.NONE,
 				new Insets(6, 4, 6, 4), 0, 0);
 		
+		constraints.gridwidth=3;
 		add(numberLabel,constraints);
-		
+		constraints.gridwidth=1;
 		constraints.gridx = 4;
 		add(skipAllButton,constraints);
 		constraints.gridy++;
@@ -162,7 +199,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		constraints.gridx++;
 		add(targetAccountLabel, constraints);
 		constraints.gridx++;
-		
+		add(addAllButton, constraints);
 		constraints.gridx=0;
 		constraints.gridy++;
 		
@@ -177,15 +214,19 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		add(addNoteButton, constraints);
 		
 		if(notes.size() > 0) {
-			descriptionField.setText(notes.get(0).getDescription());
-			sumField.setText(new Double(notes.get(0).getValue()).toString());
-			dateField.setValue(AccountingGUI.dateFormat.format(notes.get(0).getDate()));
+			setCurrentNoteInformation(currentNote);
 		}
 	}
 	
 	void setNoteNumber(JLabel targetLabel, int currentNote, int totalNumberOfNotes) {
 		String labelText = String.format("Käsitellään merkintää %d / %d",currentNote, totalNumberOfNotes);
 		targetLabel.setText(labelText);
+	}
+	
+	public void setCurrentNoteInformation(int currentNote) {
+		descriptionField.setText(notes.get(currentNote-1).getDescription());
+		sumField.setText(new Double(notes.get(currentNote-1).getValue()).toString());
+		dateField.setValue(AccountingGUI.dateFormat.format(notes.get(currentNote-1).getDate()));
 	}
 
 	@Override
@@ -201,8 +242,112 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == skipAllButton) {
+			SwingUtilities.getWindowAncestor(this).dispose();
+			String message = "Ohitettiin loput merkinnät.";
+			GUI.updateStatus(message);
+		} else if(e.getSource() == skipNoteButton) {
+			 currentNote++;
+			 if(currentNote > notes.size()) {
+				 SwingUtilities.getWindowAncestor(this).dispose();
+			 } else {
+				 setCurrentNoteInformation(currentNote);
+				 setNoteNumber(numberLabel,currentNote,notes.size());
+			 }
+			 String message = "Ohitettiin merkintä " + (currentNote-1) + ".";
+				GUI.updateStatus(message);
+			 
+		} else if(e.getSource() == addNoteButton) {
+			try {
+			Account target = accountTree.getAccount(targetAccountComboBox.getSelectedItem()
+					.toString().trim());
+			Account source = accountTree.getAccount(sourceAccountComboBox.getSelectedItem()
+					.toString().trim());
+			if (target == null || source == null || source.equals(target)) {
+				throw new NullPointerException();
+			}
+			double value = Double
+					.parseDouble(sumField.getText());
+			String description = descriptionField.getText();
+			Date date = AccountingGUI.dateFormat.parse(dateField.getText());
+			
+			if(value < 0) {
+				new Note(Math.abs(value), date, description, target, source);
+			} else {
+				new Note(Math.abs(value), date, description, source, target);
+			}
+			
+			String message = "Lisättiin merkintä " + description + ".";
+			GUI.updateStatus(message);
+			
+			currentNote++;
+			if(currentNote > notes.size()) {
+				 SwingUtilities.getWindowAncestor(this).dispose();
+			 } else {
+				 setCurrentNoteInformation(currentNote);
+				 setNoteNumber(numberLabel,currentNote,notes.size());
+			 }
+			descriptionField.requestFocus();
+			
+			
+			} catch (ParseException ex) {
+				//updateStatus("Virheellinen päivämäärä");
+				return;
+			} catch (NumberFormatException ex) {
+				//updateStatus("Virheellinen summa");
+				return;
+			} catch (NullPointerException ex) {
+				//updateStatus("Virheellinen tili");
+				//targetAccountComboBox.setForeground(AccountingGUI.errorColor);
+				return;
+			}
+		 } else if(e.getSource() == addAllButton) {
+					try {
+						while(currentNote <= notes.size()) {
+					Account target = accountTree.getAccount(targetAccountComboBox.getSelectedItem()
+							.toString().trim());
+					Account source = accountTree.getAccount(sourceAccountComboBox.getSelectedItem()
+							.toString().trim());
+					if (target == null || source == null || source.equals(target)) {
+						throw new NullPointerException();
+					}
+					double value = Double
+							.parseDouble(sumField.getText());
+					String description = descriptionField.getText();
+					Date date = AccountingGUI.dateFormat.parse(dateField.getText());
+					
+					if(value < 0) {
+						new Note(Math.abs(value), date, description, target, source);
+					} else {
+						new Note(Math.abs(value), date, description, source, target);
+					}
+					
+					String message = "Lisättiin merkintä " + description + ".";
+					GUI.updateStatus(message);
+					
+					currentNote++;
+					if(currentNote > notes.size()) {
+						 SwingUtilities.getWindowAncestor(this).dispose();
+					 } else {
+						 setCurrentNoteInformation(currentNote);
+						 setNoteNumber(numberLabel,currentNote,notes.size());
+					 }
+						}
+					
+					
+					} catch (ParseException ex) {
+						//updateStatus("Virheellinen päivämäärä");
+						return;
+					} catch (NumberFormatException ex) {
+						//updateStatus("Virheellinen summa");
+						return;
+					} catch (NullPointerException ex) {
+						//targetAccountComboBox.setForeground(AccountingGUI.errorColor);
+						//updateStatus("Virheellinen tili");
+						return;
+				 }
+		 }
 		
 	}
 
