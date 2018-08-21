@@ -10,6 +10,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -41,6 +43,35 @@ public class AddNotePanel extends JPanel implements ActionListener, FocusListene
 		selectedNote = note;
 		this.setOpaque(false);
 		this.setLayout(new GridBagLayout());
+		
+		FocusListener comboboxFL = new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(e.getSource() == debetAccountComboBox.getEditor().getEditorComponent()) {
+					debetAccountComboBox.getEditor().selectAll();
+					JTextField editor = (JTextField)debetAccountComboBox.getEditor().getEditorComponent();
+					editor.setCaretPosition(0);
+				}
+				if(e.getSource() == creditAccountComboBox.getEditor().getEditorComponent()) {
+					creditAccountComboBox.getEditor().selectAll();
+					JTextField editor = (JTextField)creditAccountComboBox.getEditor().getEditorComponent();
+					editor.setCaretPosition(0);
+				}
+				/*
+				ComboBoxEditor editor = ((JComboBox<Account>)e.getSource()).getEditor();
+		        JTextField textField = (JTextField)editor.getEditorComponent();
+		        textField.setCaretPosition(0);
+		        */
+			}
+		};
+		
 		JLabel dateLabel = new JLabel("Päivämäärä");
 		dateLabel.setFont(AccountingGUI.font);
 		dateLabel.setOpaque(false);
@@ -73,7 +104,7 @@ public class AddNotePanel extends JPanel implements ActionListener, FocusListene
 		debetAccountComboBox.addActionListener(this);
 		debetAccountComboBox.setFont(AccountingGUI.font);
 		debetAccountComboBox.setForeground(AccountingGUI.fontColor);
-		debetAccountComboBox.addFocusListener(this);
+		debetAccountComboBox.getEditor().getEditorComponent().addFocusListener(comboboxFL);
 
 		JLabel creditAccountLabel = new JLabel("Credit-tili");
 		creditAccountLabel.setFont(AccountingGUI.font);
@@ -85,7 +116,7 @@ public class AddNotePanel extends JPanel implements ActionListener, FocusListene
 		creditAccountComboBox.addActionListener(this);
 		creditAccountComboBox.setFont(AccountingGUI.font);
 		creditAccountComboBox.setForeground(AccountingGUI.fontColor);
-		creditAccountComboBox.addFocusListener(this);
+		creditAccountComboBox.getEditor().getEditorComponent().addFocusListener(comboboxFL);
 		JLabel descriptionLabel = new JLabel("Kuvaus");
 		descriptionLabel.setFont(AccountingGUI.font);
 		descriptionLabel.setOpaque(false);

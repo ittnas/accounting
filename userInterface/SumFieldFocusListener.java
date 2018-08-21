@@ -21,9 +21,11 @@ public class SumFieldFocusListener implements FocusListener {
 			try {
 				double sum = Double.parseDouble(sumString);
 				source.setForeground(AccountingGUI.fontColor);
+				/* CreateNoteFromTable requires also negative values.
 				if (sum < 0) {
 					source.setText(new Double(-sum).toString());
 				}
+				*/
 			} catch (NumberFormatException e) {
 				source.setForeground(AccountingGUI.errorColor);
 			}

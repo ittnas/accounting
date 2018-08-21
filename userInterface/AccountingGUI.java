@@ -49,6 +49,8 @@ import javax.swing.JComboBox;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.GroupLayout;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -181,6 +183,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private JPanel reports;
 	private Java2sAutoComboBox templateSelector;
 	private SimpleDateFormat messageWindowDateFormat;
+	private JMenuItem moveAccountItem;
 
 	public AccountingGUI() {
 		super();
@@ -605,6 +608,14 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				updateStatus("Yhtään tiliä ei ole valittu.");
 			}
 
+		} else if (e.getSource() == moveAccountItem) {
+			if(accountManagerTree.getSelectionPath() != null) {
+				Account selected = (Account) accountManagerTree.getSelectionPath()
+						.getLastPathComponent();
+				createMoveAccountWindow(selected);
+			} else {
+				updateStatus("Yhtään tiliä ei ole valittu.");
+			}
 		} else if (e.getSource() == accountCancelButton) {
 			((JDialog) ((AddAccountPanel) ((JButton) e.getSource()).getParent())
 					.getTopLevelAncestor()).dispose();
@@ -1019,14 +1030,27 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		
 		Action accept = new AbstractAction() {
 		    public void actionPerformed(ActionEvent e) {
-		       ((JButton)e.getSource()).doClick();
+		       editNoteButton.doClick();
 		    }
 		};
+		
+		InputMap im = contentPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		im.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		contentPane.getActionMap().put("pressed",accept);
+		
+		JTextField editor = (JTextField)contentPane.getDebetAccountCombobox().getEditor().getEditorComponent();
+		editor.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		editor.getActionMap().put("pressed",accept);
+		
+		editor = (JTextField)contentPane.getCreditAccountCombobox().getEditor().getEditorComponent();
+		editor.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		editor.getActionMap().put("pressed",accept);
 
+		/*
 		editNoteButton.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
 		editNoteButton.getActionMap().put("pressed",
                 accept);
-
+	   */
 		contentPane.addButton(editNoteButton);
 		editDialog.setContentPane(contentPane);
 		editDialog.setLocationRelativeTo(this);
@@ -1046,6 +1070,17 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		JDialog dialog = new JDialog(this);
 		dialog.setTitle("Lisää uusi tili");
 		dialog.setContentPane(addAccount);
+		dialog.setLocationRelativeTo(accountManagerTree);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.pack();
+		dialog.setVisible(true);
+	}
+	
+	private void createMoveAccountWindow(Account sourceAccount) {
+		MoveAccountPanel moveAccount = new MoveAccountPanel(sourceAccount,accountManagerTree,accountTree,this);
+		JDialog dialog = new JDialog(this);
+		dialog.setTitle("Siirrä tili " + sourceAccount.getName());
+		dialog.setContentPane(moveAccount);
 		dialog.setLocationRelativeTo(accountManagerTree);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.pack();
@@ -1189,15 +1224,27 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		
 		Action accept = new AbstractAction() {
 		    public void actionPerformed(ActionEvent e) {
-		       ((JButton)e.getSource()).doClick();
+		       addNoteButton.doClick();
 		    }
 		};
-
 		
+		InputMap im = addNotePanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		im.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		addNotePanel.getActionMap().put("pressed",accept);
+		
+		JTextField editor = (JTextField)addNotePanel.getDebetAccountCombobox().getEditor().getEditorComponent();
+		editor.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		editor.getActionMap().put("pressed",accept);
+		
+		editor = (JTextField)addNotePanel.getCreditAccountCombobox().getEditor().getEditorComponent();
+		editor.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		editor.getActionMap().put("pressed",accept);
+			
+		/*
 		addNoteButton.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
 		addNoteButton.getActionMap().put("pressed",
                 accept);
-
+		*/
 		
 		addNotePanel.addButton(addNoteButton);
 		/*
@@ -1481,6 +1528,9 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				"Poista tili sekä kaikki alitilit");
 		removeAccountRecursiveItem.addActionListener(this);
 		removeAccountRecursiveItem.setForeground(fontColor);
+		moveAccountItem = new JMenuItem("Siirrä tili");
+		moveAccountItem.addActionListener(this);
+		moveAccountItem.setForeground(fontColor);
 
 		accountMenu.add(renameAccountItem);
 		accountMenu.add(changeDescriptionAccountItem);
@@ -1488,6 +1538,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		accountMenu.add(addAccountInPlaceItem);
 		accountMenu.add(removeAccountNotRecursiveItem);
 		accountMenu.add(removeAccountRecursiveItem);
+		accountMenu.add(moveAccountItem);
 	}
 	
 	public void deleteGraph(Component removable) {
