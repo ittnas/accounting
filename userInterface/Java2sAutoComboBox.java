@@ -1,5 +1,10 @@
 package userInterface;	
 
+/**
+ * Taken from https://github.com/brainsqueezer/gcode/blob/master/src/components/Java2sAutoComboBox.java
+ * 
+ */
+
 import java.awt.event.ItemEvent;
 	import javax.swing.DefaultComboBoxModel;
 	import javax.swing.JComboBox;

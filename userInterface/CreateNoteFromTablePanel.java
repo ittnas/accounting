@@ -17,12 +17,14 @@ import javax.swing.Action;
 import javax.swing.ComboBoxEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.InputMap;
 
 import coreClasses.Account;
 import coreClasses.AccountMap;
@@ -41,6 +43,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	private Java2sAutoComboBox targetAccountComboBox;
 	private JTextField descriptionField;
 	private JLabel numberLabel;
+	private JTextField factorField;
 	
 	private AccountMap accountTree;
 	private ArrayList<NoteHolder> notes;
@@ -89,6 +92,20 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		sumField.setFont(AccountingGUI.font);
 		sumField.addFocusListener(new SumFieldFocusListener());
 		sumField.addFocusListener(this);
+		
+		JLabel factorLabel = new JLabel("Kerroin");
+		factorLabel.setFont(AccountingGUI.font);
+		factorLabel.setOpaque(false);
+		factorLabel.setForeground(AccountingGUI.fontColor);
+		
+		factorField = new JTextField();
+		factorField.setOpaque(true);
+		factorField.setColumns(4);
+		factorField.setForeground(AccountingGUI.fontColor);
+		factorField.setFont(AccountingGUI.font);
+		factorField.addFocusListener(new SumFieldFocusListener());
+		factorField.setText("1");
+		
 		JLabel sourceAccountLabel = new JLabel("Lähdetili");
 		sourceAccountLabel.setFont(AccountingGUI.font);
 		sourceAccountLabel.setOpaque(false);
@@ -105,9 +122,17 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 			
 			@Override
 			public void focusGained(FocusEvent e) {
+				if(e.getSource() == targetAccountComboBox.getEditor().getEditorComponent()) {
+					targetAccountComboBox.getEditor().selectAll();
+				}
+				if(e.getSource() == sourceAccountComboBox.getEditor().getEditorComponent()) {
+					sourceAccountComboBox.getEditor().selectAll();
+				}
+				/*
 				ComboBoxEditor editor = ((JComboBox<Account>)e.getSource()).getEditor();
 		        JTextField textField = (JTextField)editor.getEditorComponent();
 		        textField.setCaretPosition(0);
+		        */
 			}
 		};
 		
@@ -116,7 +141,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		sourceAccountComboBox.addActionListener(this);
 		sourceAccountComboBox.setFont(AccountingGUI.font);
 		sourceAccountComboBox.setForeground(AccountingGUI.fontColor);
-		sourceAccountComboBox.addFocusListener(fl);
+		sourceAccountComboBox.getEditor().getEditorComponent().addFocusListener(fl);
 
 		
 		JLabel targetAccountLabel = new JLabel("Kohdetili");
@@ -129,7 +154,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		targetAccountComboBox.addActionListener(this);
 		targetAccountComboBox.setFont(AccountingGUI.font);
 		targetAccountComboBox.setForeground(AccountingGUI.fontColor);
-		targetAccountComboBox.addFocusListener(fl);
+		targetAccountComboBox.getEditor().getEditorComponent().addFocusListener(fl);
 		
 		JLabel descriptionLabel = new JLabel("Kuvaus");
 		descriptionLabel.setFont(AccountingGUI.font);
@@ -156,14 +181,42 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		@SuppressWarnings("serial")
 		Action accept = new AbstractAction() {
 		    public void actionPerformed(ActionEvent e) {
-		       ((JButton)e.getSource()).doClick();
+		       //((JButton)e.getSource()).doClick();
+		    	addNoteButton.doClick();
+		    	descriptionField.selectAll();
 		    }
 		};
-
+/*
 		addNoteButton.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
 		addNoteButton.getActionMap().put("pressed",
                 accept);
 		
+		this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		this.getActionMap().put("pressed",accept);
+		descriptionField.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		descriptionField.getActionMap().put("pressed",accept);
+		sumField.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		sumField.getActionMap().put("pressed",accept);
+		dateField.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		dateField.getActionMap().put("pressed",accept);
+		*/
+		//From https://stackoverflow.com/questions/24336767/how-to-accept-a-value-in-a-swing-jcombobox-with-the-tab-key
+        /*
+		InputMap im = targetAccountComboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        KeyStroke existingKeyStroke = KeyStroke.getKeyStroke("ENTER");
+        KeyStroke rightKS = KeyStroke.getKeyStroke("RIGHT");
+        im.put(rightKS, im.get(existingKeyStroke));
+*/
+		
+		
+		InputMap im = this.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		im.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		this.getActionMap().put("pressed",accept);
+		
+		JTextField editor = (JTextField)targetAccountComboBox.getEditor().getEditorComponent();
+		editor.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+		editor.getActionMap().put("pressed",accept);
+
 		skipNoteButton = new JButton("Ohita");
 		skipNoteButton.setForeground(AccountingGUI.fontColor);
 		skipNoteButton.setFont(AccountingGUI.font);
@@ -181,9 +234,14 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		constraints.gridwidth=3;
 		add(numberLabel,constraints);
 		constraints.gridwidth=1;
-		constraints.gridx = 4;
+		constraints.gridx = 3;
+		add(factorLabel,constraints);
+		constraints.gridx++;
 		add(skipAllButton,constraints);
 		constraints.gridy++;
+		constraints.gridx = 3;
+		add(factorField,constraints);
+		constraints.gridx++;
 		add(skipNoteButton,constraints);
 		constraints.gridx = 0;
 		add(sourceAccountLabel, constraints);
@@ -224,8 +282,16 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	}
 	
 	public void setCurrentNoteInformation(int currentNote) {
+		double factor;
+		try{
+		 factor = Double
+				.parseDouble(factorField.getText());
+		} catch(NumberFormatException e) {
+			factor = 1;
+		}
 		descriptionField.setText(notes.get(currentNote-1).getDescription());
-		sumField.setText(new Double(notes.get(currentNote-1).getValue()).toString());
+		sumField.setText(new Double(Math.round(notes.get(currentNote-1).getValue()*factor*100.0)/100.0).toString());
+		//sumField.setText(new Double(notes.get(currentNote-1).getValue()*factor).toString());
 		dateField.setValue(AccountingGUI.dateFormat.format(notes.get(currentNote-1).getDate()));
 	}
 
@@ -233,7 +299,6 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	public void focusGained(FocusEvent e) {
 		//((JTextField)(e.getSource())).setCaretPosition(0);
 		((JTextField)(e.getSource())).selectAll();
-		
 	}
 
 	@Override
@@ -267,6 +332,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 			if (target == null || source == null || source.equals(target)) {
 				throw new NullPointerException();
 			}
+			
 			double value = Double
 					.parseDouble(sumField.getText());
 			String description = descriptionField.getText();
@@ -292,13 +358,13 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 			
 			
 			} catch (ParseException ex) {
-				//updateStatus("Virheellinen päivämäärä");
+				GUI.updateStatus("Virheellinen päivämäärä.");
 				return;
 			} catch (NumberFormatException ex) {
-				//updateStatus("Virheellinen summa");
+				GUI.updateStatus("Virheellinen summa.");
 				return;
 			} catch (NullPointerException ex) {
-				//updateStatus("Virheellinen tili");
+				GUI.updateStatus("Virheellinen tili.");
 				//targetAccountComboBox.setForeground(AccountingGUI.errorColor);
 				return;
 			}

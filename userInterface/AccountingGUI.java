@@ -351,13 +351,13 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		try {
 			dateFormat = new SimpleDateFormat(applicationProps
 					.getProperty("dateFormat"));
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		}
 		try {
 			messageWindowDateFormat = new SimpleDateFormat(applicationProps
 						.getProperty("messageWindowDateFormat"));
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			messageWindowDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		}
 		fontColor = parseColor("fontColor");
