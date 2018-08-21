@@ -21,3 +21,4 @@ DONE 20. Statistics: aikaväli voi olla negatiivinen
 21. Statistics: kun graafit luetaan tiedostostosta, pitäisi se tulla kokonaan näkyviin. Vaikea toteuttaa, koska split barin sijainnin voi m��r�t� vasta kun se on n�kyviss�.
 DONE 22. BUGI: lisää pie-chart. Lisää uusi ura ja line-chart -> kaatuu
 23. Improve loggin: show date and time of each event and save it to a file for better traceability.
+24. Enable accounts to be merged.
