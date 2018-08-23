@@ -57,18 +57,27 @@ public class TableNoteReader {
 					date = new Date();
 				}
 				double value;
+				
+				DecimalFormat df = new DecimalFormat("+#,#;-#,#");
+				//DecimalFormat df = new DecimalFormat();
+				DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+				symbols.setDecimalSeparator(',');
+				symbols.setGroupingSeparator(' ');
+				df.setDecimalFormatSymbols(symbols);
 				try {
-					DecimalFormat df = new DecimalFormat("+#,#;-#,#");
-					//DecimalFormat df = new DecimalFormat();
-					DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-					symbols.setDecimalSeparator(',');
-					symbols.setGroupingSeparator(' ');
-					df.setDecimalFormatSymbols(symbols);
 					value = df.parse(noteStrings[1].trim()).doubleValue();
 				} catch (ParseException e) {
-					setWarning(String.format("Merkinnän %d arvo on viallinen.",
-							output.size()+1));
-					value = 0;
+					// Try with dot as a decimal separator
+					symbols.setDecimalSeparator('.');
+					df.setDecimalFormatSymbols(symbols);
+					try {
+						value = df.parse(noteStrings[1].trim()).doubleValue();
+					} catch (ParseException ex2) {
+						// The value really is unreadable.
+						setWarning(String.format("Merkinnän %d arvo on viallinen.",
+								output.size()+1));
+						value = 0;
+					}
 				}
 				String description = noteStrings[3].trim() + " " + noteStrings[4].trim();
 				
