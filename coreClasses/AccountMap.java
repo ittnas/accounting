@@ -24,6 +24,11 @@ public class AccountMap {
 		addAccount(root);
 	}
 	
+	/**
+	 * Returns the root account.
+	 * @return the root account
+	 */
+	
 	public Account getRoot() {
 		return root;
 	}
