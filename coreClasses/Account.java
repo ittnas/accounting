@@ -87,6 +87,11 @@ public class Account {
 	}
 	*/
 	
+	/**
+	 * Returns the list of notes.
+	 * @return the notes.
+	 */
+	
 	public SortedList<Note> getNotes() {
 		return notes;
 	}

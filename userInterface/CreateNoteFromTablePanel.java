@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,14 +9,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.Collator;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ComboBoxEditor;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -30,8 +44,9 @@ import coreClasses.Account;
 import coreClasses.AccountMap;
 import coreClasses.Note;
 import coreClasses.NoteHolder;
+import dataStructures.SortedList;
 
-public class CreateNoteFromTablePanel extends JPanel implements ActionListener, FocusListener {
+public class CreateNoteFromTablePanel extends JPanel implements ActionListener, FocusListener,ItemListener {
 
 	/**
 	 * 
@@ -53,7 +68,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	private JButton skipNoteButton;
 	private JButton skipAllButton;
 	private JButton addAllButton;
+	private JCheckBox usePredictionBox;
 	private int currentNote = 1;
+	
 
 	public CreateNoteFromTablePanel(AccountMap accountTree, ArrayList<NoteHolder> notes,AccountingGUI GUI) {
 		super();
@@ -105,6 +122,17 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		factorField.setFont(AccountingGUI.font);
 		factorField.addFocusListener(new SumFieldFocusListener());
 		factorField.setText("1");
+		
+		JLabel usePredictionLabel = new JLabel("Ennusta tili");
+		usePredictionLabel.setFont(AccountingGUI.font);
+		usePredictionLabel.setOpaque(false);
+		usePredictionLabel.setForeground(AccountingGUI.fontColor);
+		
+		usePredictionBox = new JCheckBox("Ennusta tili");
+		usePredictionBox.setFont(AccountingGUI.font);
+		usePredictionBox.setOpaque(false);
+		usePredictionBox.setForeground(AccountingGUI.fontColor);
+		usePredictionBox.addItemListener(this);
 		
 		JLabel sourceAccountLabel = new JLabel("Lähdetili");
 		sourceAccountLabel.setFont(AccountingGUI.font);
@@ -186,6 +214,7 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		    	descriptionField.selectAll();
 		    }
 		};
+		
 /*
 		addNoteButton.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "pressed");
 		addNoteButton.getActionMap().put("pressed",
@@ -247,6 +276,8 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		add(sourceAccountLabel, constraints);
 		constraints.gridx = 1;
 		add(sourceAccountComboBox, constraints);
+		constraints.gridx++;
+		add(usePredictionBox,constraints);
 		constraints.gridy++;
 		constraints.gridx = 0;
 		add(dateLabel, constraints);
@@ -294,6 +325,65 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		//sumField.setText(new Double(notes.get(currentNote-1).getValue()*factor).toString());
 		dateField.setValue(AccountingGUI.dateFormat.format(notes.get(currentNote-1).getDate()));
 	}
+	
+	public void setPredictedAccount() {
+			 Account predicted = predictTargetAccount(accountTree.getAccount(sourceAccountComboBox.getSelectedItem().toString().trim()), descriptionField.getText());
+				if(predicted != null) {
+					targetAccountComboBox.setSelectedItem(predicted.getName());
+					targetAccountComboBox.getEditor().getEditorComponent().setBackground(Color.green);
+				} else {
+					targetAccountComboBox.getEditor().getEditorComponent().setBackground(Color.red);
+				}
+	}
+	
+	/**
+	 * Predicts the target account by comparing the description to the descriptions of existing notes.
+	 * @param sourceAccount
+	 * @param description
+	 * @return predicted account or null if the prediction cannot be made.
+	 */
+	
+	Account predictTargetAccount(Account sourceAccount,String description) {
+		String descriptionTrimmed = description.trim().toLowerCase();
+		SortedList<Note> notes = sourceAccount.getNotes();
+		Map<Account, Integer> occurences = new HashMap<Account,Integer>();
+		//ArrayList<String> descriptions = new ArrayList<String>();
+		//descriptions.ensureCapacity(notes.size());
+		for(Note note : notes) {
+			String sourceDescription = note.getDescription().trim().toLowerCase();
+			if(Objects.equals(sourceDescription, descriptionTrimmed)) {
+				Account targetAccount = note.getCredit();
+				if(targetAccount.equals(sourceAccount)) {
+					targetAccount = note.getDebet();
+				}
+				Integer nbrOccurences = occurences.get(targetAccount);
+				if(nbrOccurences != null) {
+					occurences.put(targetAccount, nbrOccurences+1);
+				} else {
+					occurences.put(targetAccount,1);
+				}
+			}
+		}
+		Set<Entry<Account, Integer>> entries = occurences.entrySet();
+		List<Entry<Account, Integer>> list = new LinkedList<Entry<Account, Integer>>(entries);
+		// Sorting by value, i.e. by number of occurences
+		
+		 Collections.sort(list, new Comparator<Entry<Account, Integer>>()
+			        {
+			            public int compare(Entry<Account, Integer> o1,
+			                    Entry<Account, Integer> o2) {
+			                    return o1.getValue().compareTo(o2.getValue());
+			            }
+			        });
+
+		//entries = occurences.entrySet();
+		//Collections.sort(descriptions,Collator.getInstance()); // Sorting based current locale
+		 if(list.size() == 0) {
+			 return null;
+		 } else {
+			 return list.get(0).getKey();
+		 }
+	}
 
 	@Override
 	public void focusGained(FocusEvent e) {
@@ -319,6 +409,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 			 } else {
 				 setCurrentNoteInformation(currentNote);
 				 setNoteNumber(numberLabel,currentNote,notes.size());
+				 if(usePredictionBox.isSelected()) {
+					 setPredictedAccount();
+				 }
 			 }
 			 String message = "Ohitettiin merkintä " + (currentNote-1) + ".";
 				GUI.updateStatus(message);
@@ -353,6 +446,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 			 } else {
 				 setCurrentNoteInformation(currentNote);
 				 setNoteNumber(numberLabel,currentNote,notes.size());
+				 if(usePredictionBox.isSelected()) {
+					 setPredictedAccount();
+				 }
 			 }
 			descriptionField.requestFocus();
 			
@@ -398,6 +494,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 					 } else {
 						 setCurrentNoteInformation(currentNote);
 						 setNoteNumber(numberLabel,currentNote,notes.size());
+						 if(usePredictionBox.isSelected()) {
+							 setPredictedAccount();
+						 }
 					 }
 						}
 					
@@ -415,6 +514,16 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 				 }
 		 }
 		
+	}
+	
+	
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		if(e.getStateChange() == ItemEvent.SELECTED) {
+				 setPredictedAccount();
+		} else {
+			targetAccountComboBox.getEditor().getEditorComponent().setBackground(Color.white);
+		}
 	}
 
 }
