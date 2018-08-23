@@ -326,6 +326,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		dateField.setValue(AccountingGUI.dateFormat.format(notes.get(currentNote-1).getDate()));
 	}
 	
+	/**
+	 * Sets the predicted account to targetAccountComboBox
+	 */
 	public void setPredictedAccount() {
 			 Account predicted = predictTargetAccount(accountTree.getAccount(sourceAccountComboBox.getSelectedItem().toString().trim()), descriptionField.getText());
 				if(predicted != null) {
@@ -385,6 +388,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		 }
 	}
 
+	/**
+	 * When ever the text field is focused, all the text is selected.
+	 */
 	@Override
 	public void focusGained(FocusEvent e) {
 		//((JTextField)(e.getSource())).setCaretPosition(0);
@@ -395,6 +401,10 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 	public void focusLost(FocusEvent e) {
 		// TODO Auto-generated method stub
 	}
+	
+	/**
+	 * Actions of all the buttons in the panel are performed here.
+	 */
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -516,7 +526,9 @@ public class CreateNoteFromTablePanel extends JPanel implements ActionListener, 
 		
 	}
 	
-	
+	/**
+	 * Activates the target account prediction. If unselected, target account combobox bg color is reset to white.
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if(e.getStateChange() == ItemEvent.SELECTED) {
