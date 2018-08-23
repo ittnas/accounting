@@ -1699,7 +1699,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	}
 
 	private void maybeShowAccountPopup(MouseEvent e) {
-		if (e.isPopupTrigger()) {
+		if (e.isPopupTrigger() && accountManagerTree.getSelectionCount() > 0) {
 			accountMenu.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
