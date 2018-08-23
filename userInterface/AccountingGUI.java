@@ -857,7 +857,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
         if (i > 0 &&  i < fileName.length() - 1) {
             ext = fileName.substring(i+1).toLowerCase();
-        }
+        } else ext = null;
         return ext;
     }
 
@@ -870,11 +870,17 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				if (extension != null) {
 					saveName = savedFile.getAbsolutePath();	
 				} else {
-					String nameCandidate = saveName + ".acc"; 
-					boolean success = savedFile.renameTo(new File(nameCandidate));
-					if (success) {
+					String nameCandidate = savedFile.getAbsolutePath() + ".acc";
+					//boolean success = savedFile.renameTo(new File(nameCandidate));
+					savedFile = new File(nameCandidate);
+					saveName = nameCandidate;
+					/* if (success) {
 						saveName = nameCandidate;
+					} else {
+						updateStatus("Annettua tiedostonimeä ei voida käyttää.");
+						return;
 					}
+					*/
 				}
             //String input = (String) JOptionPane.showInputDialog(this,
             //        "Anna tiedoston nimi", "Tallenna nimellä",
@@ -892,7 +898,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
                 performSaving(saveName);
 			}
         } else {
-            statusTextArea.append("Ei tallennettavaa kirjanpitoa.\n");
+            updateStatus("Ei tallennettavaa kirjanpitoa.\n");
         }
 		
 	}
