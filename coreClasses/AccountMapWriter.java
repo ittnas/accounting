@@ -11,8 +11,8 @@ import dataStructures.SortedList;
 
 public class AccountMapWriter {
 	
-	private String fileName;
-	private AccountMap accountMap;
+	protected String fileName;
+	protected AccountMap accountMap;
 	private ArrayList<String> errors;
 	private int errorCount;
 	
@@ -63,7 +63,7 @@ public class AccountMapWriter {
         return errorCount;
     }
     
-    private void setError(String error) {
+    protected void setError(String error) {
         errors.add(error);
         errorCount++;
     }

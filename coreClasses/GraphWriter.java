@@ -31,7 +31,7 @@ public class GraphWriter {
             }
             out.close();
         } catch (IOException e) {
-            setError("Can't save the file" + fileName + ".\n");
+            setError("Cannot save the file" + fileName + ".\n");
         }
 	}
 	
