@@ -223,7 +223,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	private JScrollPane createStatusWindow() {
 
-		statusTextArea = new JTextArea(); // PASKAA, pitäis keksiä jokin parempi
+		statusTextArea = new JTextArea();
 		statusTextArea.setRows(4);
 		statusTextArea.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane();
