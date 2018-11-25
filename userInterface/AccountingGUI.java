@@ -110,6 +110,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		new AccountingGUI();
 	}
 
+	
 	private JTextArea statusTextArea;
 	private JPanel noteBook;
 	private JPanel statistics;
