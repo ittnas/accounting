@@ -30,8 +30,10 @@ public class AccountMapXMLWriter extends AccountMapWriter {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.newDocument();
-			writeXMLAccounts(doc);
-			writeXMLNotes(doc);
+			Element root = doc.createElement("Root");
+			doc.appendChild(root);
+			writeXMLAccounts(root, doc);
+			writeXMLNotes(root, doc);
 			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -56,9 +58,9 @@ public class AccountMapXMLWriter extends AccountMapWriter {
         }
 	}
 	
-    private void writeXMLAccounts(Document doc) {
+    private void writeXMLAccounts(Element root, Document doc) {
     	Element accountsElement = doc.createElement("Accounts");
-    	doc.appendChild(accountsElement);
+    	root.appendChild(accountsElement);
     	for(Account account : accountMap.getAccounts().values()) {
 			Element accountElement = doc.createElement("Account");
 			accountsElement.appendChild(accountElement);
@@ -98,9 +100,9 @@ public class AccountMapXMLWriter extends AccountMapWriter {
 		**/
 	}
     
-    private void writeXMLNotes(Document doc) {
+    private void writeXMLNotes(Element root, Document doc) {
     	Element notesElement = doc.createElement("Notes");
-    	doc.appendChild(notesElement);
+    	root.appendChild(notesElement);
     	
     	LinkedList<Note> notes = getNotes(accountMap.getRoot());
     	for(Note note : notes) {

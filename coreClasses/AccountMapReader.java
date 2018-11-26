@@ -11,10 +11,10 @@ import java.util.HashMap;
 
 public class AccountMapReader {
 
-	private String fileName;
+	protected String fileName;
 	private ArrayList<String> errorReport;
 	private ArrayList<String> warningReport;
-	private AccountMap map;
+	protected AccountMap map;
 
 	public AccountMapReader(String fileName) {
 		this.fileName = fileName;
@@ -235,11 +235,11 @@ public class AccountMapReader {
 		return line;
 	}
 
-	private void setError(String errorText) {
+	protected void setError(String errorText) {
 		errorReport.add(errorText);
 	}
 
-	private void setWarning(String warningText) {
+	protected void setWarning(String warningText) {
 		warningReport.add(warningText);
 	}
 

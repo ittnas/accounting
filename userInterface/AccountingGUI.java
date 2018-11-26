@@ -86,6 +86,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import coreClasses.Account;
 import coreClasses.AccountMap;
 import coreClasses.AccountMapWriter;
+import coreClasses.AccountMapXMLWriter;
 import coreClasses.AccountTree;
 import coreClasses.ExcelNoteReader;
 import coreClasses.GraphReader;
@@ -831,7 +832,8 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			return;
 		}
 		ArrayList<GraphState> states = getGraphStates();
-		AccountMapWriter writer = new AccountMapWriter(saveName, accountTree);
+		//AccountMapWriter writer = new AccountMapWriter(saveName, accountTree);
+		AccountMapWriter writer = new AccountMapXMLWriter(saveName, accountTree);
 		writer.writeMap();
 		GraphWriter gwrt = new GraphWriter(graphSaveName, states);
 		gwrt.writeState();
@@ -921,7 +923,8 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	}
 
 	private void openFile(String fileName, String saveName) {
-		coreClasses.AccountMapReader reader = new coreClasses.AccountMapReader(saveName);
+		//coreClasses.AccountMapReader reader = new coreClasses.AccountMapReader(saveName);
+		coreClasses.AccountMapReader reader = new coreClasses.AccountMapXMLReader(saveName);
 		
 		if (accountTree != null) {
 			AccountingGUI gui = new AccountingGUI();
