@@ -1101,6 +1101,12 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		return true;
 		// TODO tee popup
 	}
+	
+	/**
+	 *  Writes the given message to the status window. This should be the primary method of communicating info to the user.
+	 *  TODO: write the message also to a log file. 
+	 * @param message to be written.
+	 */
 
 	public void updateStatus(String message) {
 		String dateString = messageWindowDateFormat.format(new Date());
