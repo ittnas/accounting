@@ -930,6 +930,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			AccountingGUI gui = new AccountingGUI();
 			gui.openFile(fileName, saveName);
 		} else {
+			System.out.println("Opening!");
 			accountTree = reader.readMap();
 			updateStatus(reader.printErrors());
 			if (accountTree == null) {

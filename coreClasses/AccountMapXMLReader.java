@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -75,15 +76,58 @@ public class AccountMapXMLReader extends AccountMapReader {
 	        }
 			map = new AccountMap(accounts);
 			map.setRoot(root);
-			
 			// Read the notes
 			nList = doc.getElementsByTagName("Note");
+			System.out.println("Starting to read notes.");
+			System.out.println(nList.getLength());
 	        for (int ii=0; ii < nList.getLength(); ii++) {
 	        	Node nNode = nList.item(ii);
 	        	System.out.println("\nCurrent Element :" + nNode.getNodeName());
 	        	if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-	        		Element eElement = (Element) nNode;
-	        		
+	        		Element eElement = (Element) nNode; 
+	        		String dateStr = eElement.getElementsByTagName("Date").item(0).getTextContent();
+	        		String description = eElement.getElementsByTagName("Description").item(0).getTextContent();
+	        		String debetStr = eElement.getElementsByTagName("Debet").item(0).getTextContent();
+	        		String creditStr = eElement.getElementsByTagName("Credit").item(0).getTextContent();
+	        		String valueStr = eElement.getElementsByTagName("Value").item(0).getTextContent();
+	        		long dateValue = 0;
+					try {
+						dateValue = Long.parseLong(dateStr);
+					} catch (NumberFormatException ex) {
+						setError(String.format(
+								"Merkinnän %s päivämäärä on virheellinen.",
+								description));
+						continue;
+					}
+					Date date = new Date(dateValue);
+					Account debet = null;
+					if (map.containsKey(debetStr)) {
+						debet = map.getAccount(debetStr);
+					} else {
+						setError(String.format(
+								"Merkinnän %s debet-tili on virheellinen",
+								description));
+						continue;
+					}
+					Account credit = null;
+					if (map.containsKey(creditStr)) {
+						credit = map.getAccount(creditStr);
+					} else {
+						setError(String.format(
+								"Merkinnän %s credit-tili on virheellinen",
+								description));
+						continue;
+					}
+
+					double value = 0;
+					try {
+						value = Double.parseDouble(valueStr);
+					} catch (NumberFormatException ex) {
+						setError(String.format(
+								"Merkinnän %s arvo on virheellinen.", description));
+						continue;
+					}
+					new Note(value, date, description, debet, credit);
 	        	}
 	        }
 			

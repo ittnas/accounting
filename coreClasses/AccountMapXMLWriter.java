@@ -103,28 +103,30 @@ public class AccountMapXMLWriter extends AccountMapWriter {
     private void writeXMLNotes(Element root, Document doc) {
     	Element notesElement = doc.createElement("Notes");
     	root.appendChild(notesElement);
-    	
     	LinkedList<Note> notes = getNotes(accountMap.getRoot());
     	for(Note note : notes) {
+    		Element noteElement = doc.createElement("Note");
+    		notesElement.appendChild(noteElement);
+    		
 			Element descriptionElement = doc.createElement("Description");
 			descriptionElement.appendChild(doc.createTextNode(note.getDescription()));
-			notesElement.appendChild(descriptionElement);
+			noteElement.appendChild(descriptionElement);
 			
 			Element dateElement = doc.createElement("Date");
-			dateElement.appendChild(doc.createTextNode(note.getDate().toString()));
-			notesElement.appendChild(dateElement);
+			dateElement.appendChild(doc.createTextNode(Long.toString(note.getDate().getTime())));
+			noteElement.appendChild(dateElement);
 			
 			Element debetElement = doc.createElement("Debet");
 			debetElement.appendChild(doc.createTextNode(note.getDebet().getName()));
-			notesElement.appendChild(debetElement);
+			noteElement.appendChild(debetElement);
 			
 			Element creditElement = doc.createElement("Credit");
 			creditElement.appendChild(doc.createTextNode(note.getCredit().getName()));
-			notesElement.appendChild(creditElement);
+			noteElement.appendChild(creditElement);
 			
 			Element valueElement = doc.createElement("Value");
 			valueElement.appendChild(doc.createTextNode(Double.toString(note.getValue())));
-			notesElement.appendChild(valueElement);
+			noteElement.appendChild(valueElement);
     		//out.write(String.format("%s;%s;%s;%s;%s\n", note.getDescription(), note.getDate().getTime(), note.getDebet().getName(), note.getCredit().getName(), note.getValue()));
     	}
     	/**
