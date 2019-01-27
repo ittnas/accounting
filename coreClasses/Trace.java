@@ -51,6 +51,7 @@ public class Trace {
 	public void removeAccount(int index) {
 		AccountData removable = accData.get(index);
 		for(AccountData iterator : accData) {
+			// TODO there seems to be a bug! iterator.getRelative() is Account and removable is AccountData.
 			if(iterator.getRelative().equals(removable)) {
 				iterator.setRelative(null);
 			}
