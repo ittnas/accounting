@@ -80,7 +80,7 @@ public class AccountMapXMLReader extends AccountMapReader {
 			nList = doc.getElementsByTagName("Note");
 	        for (int ii=0; ii < nList.getLength(); ii++) {
 	        	Node nNode = nList.item(ii);
-	        	//System.out.println("\nCurrent Element :" + nNode.getNodeName());
+	        	System.out.println("\nCurrent Element :" + nNode.getNodeName());
 	        	if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 	        		Element eElement = (Element) nNode;
 	        		
