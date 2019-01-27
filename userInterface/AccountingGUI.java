@@ -1730,7 +1730,16 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getSource() == noteTable) {
+		if (e.getSource() == noteTable) { // Mouse is pressed at noteTable
+			// Only create the popup if pressed at a row.
+			int r = noteTable.rowAtPoint(e.getPoint());
+	        if (r >= 0 && r < noteTable.getRowCount()) {
+	            noteTable.setRowSelectionInterval(r, r); // Select the row
+	        } else {
+	            return; // Do nothing
+	        	//table.clearSelection();
+	        }
+			
 			maybeShowPopup(e);
 		}
 		if (e.getSource() == accountManagerTree) {
