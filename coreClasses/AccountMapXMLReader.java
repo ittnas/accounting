@@ -1,17 +1,13 @@
 package coreClasses;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.util.Date;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -78,11 +74,8 @@ public class AccountMapXMLReader extends AccountMapReader {
 			map.setRoot(root);
 			// Read the notes
 			nList = doc.getElementsByTagName("Note");
-			System.out.println("Starting to read notes.");
-			System.out.println(nList.getLength());
-	        for (int ii=0; ii < nList.getLength(); ii++) {
+			for (int ii=0; ii < nList.getLength(); ii++) {
 	        	Node nNode = nList.item(ii);
-	        	System.out.println("\nCurrent Element :" + nNode.getNodeName());
 	        	if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 	        		Element eElement = (Element) nNode; 
 	        		String dateStr = eElement.getElementsByTagName("Date").item(0).getTextContent();
@@ -105,7 +98,7 @@ public class AccountMapXMLReader extends AccountMapReader {
 						debet = map.getAccount(debetStr);
 					} else {
 						setError(String.format(
-								"Merkinnän %s debet-tili on virheellinen",
+								"Merkinnän %s debet-tili on virheellinen.",
 								description));
 						continue;
 					}
@@ -114,7 +107,7 @@ public class AccountMapXMLReader extends AccountMapReader {
 						credit = map.getAccount(creditStr);
 					} else {
 						setError(String.format(
-								"Merkinnän %s credit-tili on virheellinen",
+								"Merkinnän %s credit-tili on virheellinen.",
 								description));
 						continue;
 					}

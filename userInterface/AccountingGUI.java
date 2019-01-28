@@ -85,7 +85,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import coreClasses.Account;
 import coreClasses.AccountMap;
+import coreClasses.AccountMapReader;
 import coreClasses.AccountMapWriter;
+import coreClasses.AccountMapXMLReader;
 import coreClasses.AccountMapXMLWriter;
 import coreClasses.AccountTree;
 import coreClasses.ExcelNoteReader;
@@ -833,7 +835,19 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		}
 		ArrayList<GraphState> states = getGraphStates();
 		//AccountMapWriter writer = new AccountMapWriter(saveName, accountTree);
-		AccountMapWriter writer = new AccountMapXMLWriter(saveName, accountTree);
+		AccountMapWriter writer = null;
+		switch (extension) {
+		case "xml":
+			writer = new AccountMapXMLWriter(saveName, accountTree);
+			break;
+		case "acc":
+			writer = new AccountMapWriter(saveName, accountTree);
+			break;
+		default:
+			writer = new AccountMapWriter(saveName, accountTree);
+			updateStatus("Filename extension not recognized. Using the default fileformat.");
+		}
+		//AccountMapWriter writer = new AccountMapXMLWriter(saveName, accountTree);
 		writer.writeMap();
 		GraphWriter gwrt = new GraphWriter(graphSaveName, states);
 		gwrt.writeState();
@@ -924,7 +938,20 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	private void openFile(String fileName, String saveName) {
 		//coreClasses.AccountMapReader reader = new coreClasses.AccountMapReader(saveName);
-		coreClasses.AccountMapReader reader = new coreClasses.AccountMapXMLReader(saveName);
+		String extension = getExtension(saveName);
+		AccountMapReader reader = null;
+		switch (extension) {
+		case "xml":
+			reader = new AccountMapXMLReader(saveName);
+			break;
+		case "acc":
+			reader = new AccountMapReader(saveName);
+			break;
+		default:
+			reader = new AccountMapReader(saveName);
+			updateStatus("Filename extension not recognized. Using the default fileformat.");
+		}
+//		AccountMapReader reader = new coreClasses.AccountMapXMLReader(saveName);
 		
 		if (accountTree != null) {
 			AccountingGUI gui = new AccountingGUI();
@@ -939,7 +966,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			this.saveName = saveName;
 			this.fileName = fileName;
 			initializeNoteBook();
-			String extension = getExtension(saveName);
+			//String extension = getExtension(saveName);
 			int extLength = 0;
 			if(extension != null) {
 				extLength = extension.length();
