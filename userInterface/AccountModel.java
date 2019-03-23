@@ -1,5 +1,7 @@
 package userInterface;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.event.TreeModelListener;
@@ -11,11 +13,13 @@ import coreClasses.Account;
 public class AccountModel implements TreeModel {
 
 	private Account root;
+	private Hashtable<String,Account> roots;
 	private Vector<TreeModelListener> treeModelListeners = new Vector<TreeModelListener>();
 
 	public AccountModel(Account root) {
 		this.root = root;
-
+		this.roots = new Hashtable<String, Account>();
+		this.roots.put(root.getCurrency(), root);
 	}
 
 	@Override
@@ -43,6 +47,10 @@ public class AccountModel implements TreeModel {
 	@Override
 	public Object getRoot() {
 		return root;
+	}
+	
+	public Object getRoot(String currency) {
+		return roots.get(currency);
 	}
 
 	@Override

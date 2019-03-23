@@ -16,11 +16,11 @@ public class Note implements Comparable<Note> {
 		this.value = value;
 		this.date = date;
 		this.description = description;
-		if(this.debet != null) {
+		if(this.debet != null && !credit.equals(debet)) {
 			this.debet.addNote(this);
 		}
 		if(this.credit != null && !credit.equals(debet)) {
-		this.credit.addNote(this);
+			this.credit.addNote(this);
 		}
 	}
 	
@@ -71,7 +71,6 @@ public class Note implements Comparable<Note> {
 		if(debet != null) {
 			debet.removeNote(this);
 		}
-		
 	}
 
 	@Override

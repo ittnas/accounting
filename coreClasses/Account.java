@@ -11,14 +11,22 @@ public class Account {
 	private ArrayList<Account> children;
 	private SortedList<Note> notes;
 	private Account parent = null;
+	private String currency = null;
+	final private static String defaultCurrency = "EUR";
 	
 	
 	public Account(String name, String description) {
+		this(name,description,defaultCurrency);
+	}
+	
+	public Account(String name, String description, String currency) {
 		this.description = description;
 		this.name = name;
+		this.currency = currency;
 		children = new ArrayList<Account>();
 		notes = new SortedList<Note>();
 	}
+
 	
 	public String getName() {
 		return name;
@@ -27,6 +35,10 @@ public class Account {
 	public String getDescription() {
 		//TODO Should also return list of children
 		return description;
+	}
+	
+	public String getCurrency() {
+		return currency;
 	}
 	
 	boolean addNote(Note note) {
@@ -127,6 +139,15 @@ public class Account {
 	}
 	
 	public String toString() {
-		return String.format(name + "  %.2f", getValue());
+		return String.format(name + "  %.2f %s", getValue(),getCurrency());
+	}
+	
+	/**
+	 * Test the Account class.
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Account A = new Account("A", "","USD");
+		System.out.println(A.toString());
 	}
 }

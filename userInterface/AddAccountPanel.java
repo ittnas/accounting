@@ -5,8 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -23,6 +21,7 @@ public class AddAccountPanel extends JPanel {
 	private JTextField accountDescrField;
 	private GridBagConstraints constraints;
 	private boolean addAsChild;
+	//private JTextField accountCurrencyField;
 		
 	public AddAccountPanel(boolean addAsChild) {
 		super();
@@ -42,26 +41,43 @@ public class AddAccountPanel extends JPanel {
 		descrLabel.setForeground(AccountingGUI.fontColor);
 		descrLabel.setFont(AccountingGUI.font);
 		
+		/**
+		JLabel currencyLabel = new JLabel("Tilin valuutta");
+		currencyLabel.setOpaque(false);
+		currencyLabel.setForeground(AccountingGUI.fontColor);
+		currencyLabel.setFont(AccountingGUI.font);
+		**/
+		
 		accountNameField = new JTextField();
-		accountNameField.setOpaque(false);
+		accountNameField.setOpaque(true);
 		accountNameField.setForeground(AccountingGUI.fontColor);
 		accountNameField.setFont(AccountingGUI.font);
 		
 		accountDescrField = new JTextField();
-		accountDescrField.setOpaque(false);
+		accountDescrField.setOpaque(true);
 		accountDescrField.setForeground(AccountingGUI.fontColor);
 		accountDescrField.setFont(AccountingGUI.font);
 		
+		/**
+		accountCurrencyField = new JTextField();
+		accountCurrencyField.setOpaque(true);
+		accountCurrencyField.setForeground(AccountingGUI.fontColor);
+		accountCurrencyField.setFont(AccountingGUI.font);
+		accountCurrencyField.setText(AccountingGUI.proposedCurrency);
+		**/
 		add(nameLabel, constraints);
 		constraints.gridx++;
 		add(descrLabel, constraints);
+		//constraints.gridx++;
+		//add(currencyLabel, constraints);
 		constraints.gridx = 0;
 		constraints.gridy++;
 		add(accountNameField, constraints);
 		constraints.gridx++;
 		add(accountDescrField, constraints);
-		constraints.gridx = 0;
-		constraints.gridy++;
+		constraints.gridx++;
+		//add(accountCurrencyField, constraints);
+		//constraints.gridx++;
 	}
 	
 	public void addButton(JButton button) {

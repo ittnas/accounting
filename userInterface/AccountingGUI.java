@@ -39,8 +39,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+
 import javax.swing.BorderFactory;
 
 import javax.swing.JButton;
@@ -90,6 +94,7 @@ import coreClasses.AccountMapWriter;
 import coreClasses.AccountMapXMLReader;
 import coreClasses.AccountMapXMLWriter;
 import coreClasses.AccountTree;
+import coreClasses.CurrencyTradingAccount;
 import coreClasses.ExcelNoteReader;
 import coreClasses.GraphReader;
 import coreClasses.GraphState;
@@ -131,10 +136,13 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	public static Font font;
 	public static Font titleFont;
 	public static Font boldFont;
+	public static String proposedCurrency;
+	public static String defaultCurrency;
 	private JPanel accountManager;
 	private JFormattedTextField dateField;
 	private JTextField sumField;
 	private AccountMap accountTree;
+	private HashMap<String, AccountMap> accountMaps; // Currency, AccountMap
 	private JButton addNoteButton;
 	public static Color lineColor;
 	private Java2sAutoComboBox accountChooser;
@@ -188,6 +196,15 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	private Java2sAutoComboBox templateSelector;
 	private SimpleDateFormat messageWindowDateFormat;
 	private JMenuItem moveAccountItem;
+	private JPopupMenu addNewCurrencyMenu;
+	private JMenuItem addNewCurrencyItem;
+	private JButton currencyOKButton;
+	private JButton currencyCancelButton;
+	private Map<String, CurrencyTradingAccount> currencyTradingAccounts;
+	private Java2sAutoComboBox currencyChooser;
+	private ArrayList<String> currencies;
+	private AddCurrencyPanel addCurrencyPanel;
+	private JDialog addCurrencyDialog;
 
 	public AccountingGUI() {
 		super();
@@ -381,9 +398,14 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		} catch (Exception e) {
 			font = Font.decode("Times-" + fontSize);
 		}
+		defaultCurrency = applicationProps.getProperty("defaultCurrency", "EUR").toUpperCase();
+		proposedCurrency = defaultCurrency;
+		currencies = new ArrayList<String>();
+		currencies.add(defaultCurrency);
 		
 		comboboxUpdateList = new ArrayList<Java2sAutoComboBox>();
 		graphPanels = new ArrayList<GraphPanel>();
+		accountMaps = new HashMap<String,AccountMap>();
 	}
 
 	private Color parseColor(String colorName) {
@@ -398,19 +420,25 @@ public class AccountingGUI extends JFrame implements ActionListener,
 	
 	private void initializeNoteBook() {
 		noteBook.add(createNoteBook());
-		accountManagerScroll = createAccountScrollPane(accountTree.getRoot(), true);
+		accountManagerScroll = createAccountScrollPane(accountMaps.get(defaultCurrency).getRoot(), true);
 		accountManagerTree = (AccountTree) accountManagerScroll
 				.getViewport().getView();
 		accountManagerTree.addMouseListener(this);
 		resizeManagerPanel();
 		accountManagerScroll.addMouseListener(this);
 		createEditAccountsMenu();
+		createAddNewCurrencyMenu();
 
 		accountManager.add(accountManagerScroll);
 		accountManager.addComponentListener(this);
-		accountChooser.setSelectedItem(accountTree.getRoot().getName());
+		accountChooser.setSelectedItem(accountMaps.get(defaultCurrency).getRoot().getName());
 		searchAccount();
 		tools.setEnabled(true);
+	}
+	
+	private void addNewAccountMapToTree(AccountMap map) {
+		//TODO
+		//accountManagerScroll
 	}
 
 	@Override
@@ -506,16 +534,20 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 			searchAccount();
 		} else if (e.getSource() instanceof JComboBox) {
+			// Not required as only existing objects can be selected.
+			/*
 			JComboBox box = (JComboBox) e.getSource();
 			String selection = (String) box.getSelectedItem();
 			if(selection != null){
 				selection = selection.trim();
 			}
+			
 			if (!accountTree.getAccounts().containsKey(selection)) {
 				box.getEditor().getEditorComponent().setForeground(errorColor);
 			} else {
 				box.getEditor().getEditorComponent().setForeground(fontColor);
 			}
+			*/
 
 		} else if (e.getSource() == editNoteItem) {
 
@@ -626,6 +658,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		} else if (e.getSource() == accountOkButton) {
 			Account account = ((AddAccountPanel) ((JButton) e.getSource())
 					.getParent()).getAccount();
+			//String newAccountCurrency = account.getCurrency();
 
 			if (((AddAccountPanel) ((JButton) e.getSource()).getParent())
 					.addAsChild()) {
@@ -660,6 +693,21 @@ public class AccountingGUI extends JFrame implements ActionListener,
 				tree.expandAll();
 				tree.updateUI();
 			}
+		} else if (e.getSource() == currencyOKButton) { 
+			// Add new currency.
+			String currency = addCurrencyPanel.getCurrency();
+			if(!currency.equals("") && !currencies.contains(currency)) {
+				addCurrency(currency);
+				addCurrencyDialog.dispose();
+				updateStatus("Lisättiin uusi valuutta " + currency + ".");
+			} else {
+				addCurrencyPanel.setInvalidCurrency();
+				updateStatus("Uusi valuutta " + currency + " on virheellinen.");
+				return;
+			}
+		} else if (e.getSource() == currencyCancelButton) {
+			((JDialog) ((AddCurrencyPanel) ((JButton) e.getSource()).getParent())
+					.getTopLevelAncestor()).dispose();
 		} else if (e.getSource() == addAccountInPlaceItem) {
 			if (accountManagerTree.getSelectionPath() != null) {
 				createAddAccountWindow(false);
@@ -727,6 +775,8 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			addNotesFromFile();
 		} else if (e.getSource() == addNotesFromTable) {
 			addNotesFromTable();
+		} else if (e.getSource() == addNewCurrencyItem) {
+			createAddCurrencyWindow();
 		}
 	}
 
@@ -931,7 +981,8 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	private void newFile() {
 		accountTree = new AccountMap();
-		accountTree.setRoot(new Account("Juuri", "Juuritili"));
+		accountTree.setRoot(new Account("Juuri", "Juuritili",defaultCurrency));
+		accountMaps.put(defaultCurrency, accountTree);
 		initializeNoteBook();
 		initializeStatistics(null);
 	}
@@ -1057,6 +1108,27 @@ public class AccountingGUI extends JFrame implements ActionListener,
 
 	}
 	
+	private void addCurrency(String newCurrency) {
+		currencies.add(newCurrency);
+		Object item = currencyChooser.getSelectedItem();
+		currencyChooser.setDataList(currencies);
+		currencyChooser.setSelectedItem(item);
+		
+		AccountMap accountMap = new AccountMap();
+		accountMap.setRoot(new Account("Juuri", "Juuritili", newCurrency));
+		accountMaps.put(newCurrency, accountMap);
+	}
+	
+	private void removeCurrency(String oldCurrency) {
+		currencies.remove(oldCurrency);
+		Object item = currencyChooser.getSelectedItem();
+		currencyChooser.setDataList(currencies);
+		if(!item.equals(oldCurrency)) {
+			currencyChooser.setSelectedItem(item);
+		}
+		
+	}
+	
 	private void createEditingWindow(Note note) {
 		editDialog = new JDialog(this, "Muokkaa merkintää");
 		editDialog.setModal(true);
@@ -1112,6 +1184,24 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.pack();
 		dialog.setVisible(true);
+	}
+	
+	private void createAddCurrencyWindow() {
+		addCurrencyPanel = new AddCurrencyPanel();
+		
+		currencyOKButton = new JButton("OK");
+		currencyOKButton.addActionListener(this);
+		currencyCancelButton = new JButton("Cancel");
+		currencyCancelButton.addActionListener(this);
+		addCurrencyPanel.addButton(currencyOKButton);
+		addCurrencyPanel.addButton(currencyCancelButton);
+		addCurrencyDialog = new JDialog(this);
+		addCurrencyDialog.setTitle("Lisää uusi tili");
+		addCurrencyDialog.setContentPane(addCurrencyPanel);
+		addCurrencyDialog.setLocationRelativeTo(accountManagerTree);
+		addCurrencyDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		addCurrencyDialog.pack();
+		addCurrencyDialog.setVisible(true);
 	}
 	
 	private void createMoveAccountWindow(Account sourceAccount) {
@@ -1412,6 +1502,21 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		dateLabel.setFont(font);
 		dateLabel.setOpaque(false);
 		dateLabel.setForeground(fontColor);
+		
+		JLabel currencyLabel = new JLabel("Valuutta");
+		currencyLabel.setFont(font);
+		currencyLabel.setOpaque(false);
+		currencyLabel.setForeground(fontColor);
+		
+		currencyChooser = new Java2sAutoComboBox(currencies);
+		currencyChooser.setForeground(fontColor);
+		currencyChooser.setFont(font);
+		currencyChooser.addActionListener(this);
+
+		addComboboxToUpdateList(accountChooser);
+		accountChooser.setForeground(fontColor);
+		accountChooser.setFont(font);
+		accountChooser.addActionListener(this);
 
 		MaskFormatter mask = createMaskFormatter();
 		dateStartField = new JFormattedTextField(mask);
@@ -1472,6 +1577,10 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		accountChooserPanel.add(accountIntervalValueFIeld, constraints);
 		constraints.weightx = 1;
 		constraints.gridx++;
+		constraints.gridy--;
+		accountChooserPanel.add(currencyLabel,constraints);
+		constraints.gridy++;
+		accountChooserPanel.add(currencyChooser,constraints);
 		JPanel fillPanel = new JPanel();
 		fillPanel.setOpaque(false);
 		accountChooserPanel.add(fillPanel, constraints);
@@ -1583,6 +1692,19 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		accountMenu.add(removeAccountNotRecursiveItem);
 		accountMenu.add(removeAccountRecursiveItem);
 		accountMenu.add(moveAccountItem);
+	}
+	
+	/**
+	 * Creates a new Pop window that can be used to add new currency to the Account tree.
+	 */
+	
+	private void createAddNewCurrencyMenu() {
+		addNewCurrencyMenu = new JPopupMenu();
+		addNewCurrencyItem = new JMenuItem("Lisää uusi valuutta");
+		addNewCurrencyItem.addActionListener(this);
+		addNewCurrencyItem.setForeground(fontColor);
+
+		addNewCurrencyMenu.add(addNewCurrencyItem);
 	}
 	
 	public void deleteGraph(Component removable) {
@@ -1735,10 +1857,21 @@ public class AccountingGUI extends JFrame implements ActionListener,
 			editMenu.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
+	
+	/**
+	 * Decides whether a popup with a menu to choose account edition options should be shown.
+	 * The menu is shown if one of the existing accounts in the account tree is selected. 
+	 * If not, a menu querying whether a new currency should be added is shown
+	 * @param e The mouse event, that was created when the button was released.
+	 */
 
 	private void maybeShowAccountPopup(MouseEvent e) {
-		if (e.isPopupTrigger() && accountManagerTree.getSelectionCount() > 0) {
-			accountMenu.show(e.getComponent(), e.getX(), e.getY());
+		if (e.isPopupTrigger()) {
+			if(accountManagerTree.getSelectionCount() > 0) {
+				accountMenu.show(e.getComponent(), e.getX(), e.getY());
+		} else {
+			addNewCurrencyMenu.show(e.getComponent(), e.getX(), e.getY());
+		}
 		}
 	}
 
@@ -1885,6 +2018,7 @@ public class AccountingGUI extends JFrame implements ActionListener,
 		tree.setCellRenderer(renderer);
 
 		tree.expandAll();
+		
 		scroll.setViewportView(tree);
 		return scroll;
 	}
